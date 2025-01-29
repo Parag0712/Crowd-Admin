@@ -14,7 +14,11 @@ export const universityService = {
     fetchHandler<ApiResponse>(UNIVERSITY_API.ADD, "POST", universityData),
 
   edit: (universityId: number, universityData: Partial<UniversityPayload>) =>
-    fetchHandler<ApiResponse>(UNIVERSITY_API.EDIT(universityId), "PUT", universityData),
+    fetchHandler<ApiResponse>(
+      UNIVERSITY_API.EDIT(universityId),
+      "PUT",
+      universityData,
+    ),
 
   delete: (universityId: number) =>
     fetchHandler<ApiResponse>(UNIVERSITY_API.DELETE(universityId), "DELETE"),
@@ -24,9 +28,9 @@ export const universityService = {
       page && pageSize
         ? `${UNIVERSITY_API.GET_ALL}?page=${page}&pageSize=${pageSize}`
         : UNIVERSITY_API.GET_ALL,
-      "GET"
+      "GET",
     ),
-    
+
   getById: (universityId: number) =>
     fetchHandler<ApiResponse>(UNIVERSITY_API.GET_BY_ID(universityId), "GET"),
 };

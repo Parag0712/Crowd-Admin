@@ -29,8 +29,6 @@ export const useAddUser = () => {
   });
 };
 
-
-
 export const useEditUser = () => {
   const queryClient = useQueryClient();
   const toast = useCustomToast();

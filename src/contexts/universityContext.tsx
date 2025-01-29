@@ -8,7 +8,9 @@ interface UniversityContextType {
   setUniversity: React.Dispatch<React.SetStateAction<University | null>>;
 }
 
-const UniversityContext = createContext<UniversityContextType | undefined>(undefined);
+const UniversityContext = createContext<UniversityContextType | undefined>(
+  undefined,
+);
 
 export const UniversityProvider = ({ children }: { children: ReactNode }) => {
   const [university, setUniversity] = useState<University | null>(null);
@@ -24,7 +26,7 @@ export const useUniversityContext = () => {
   const context = useContext(UniversityContext);
   if (context === undefined) {
     throw new Error(
-      "useUniversityContext must be used within a UniversityProvider"
+      "useUniversityContext must be used within a UniversityProvider",
     );
   }
   return context;

@@ -7,11 +7,15 @@ import {
 import { GuardPayload } from "@/types/index.d";
 import { guardService } from "@/service/guard";
 
-export const useGuard = (page?: number, pageSize?: number, universityId?: number) => {
+export const useGuard = (
+  page?: number,
+  pageSize?: number,
+  universityId?: number,
+) => {
   return useQuery({
     queryKey: ["guard", page, pageSize],
     queryFn: async () => {
-      const response = await guardService.getAll(page, pageSize,universityId);
+      const response = await guardService.getAll(page, pageSize, universityId);
       return response;
     },
   });

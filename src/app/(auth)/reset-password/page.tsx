@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { resetPassword } from "@/service/auth";
 
-
 const formSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });

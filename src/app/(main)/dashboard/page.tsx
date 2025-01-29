@@ -42,7 +42,7 @@ const UniversityCard = ({
         "p-4 sm:p-6 relative overflow-hidden transition-all duration-300",
         isDisabled
           ? "opacity-75 cursor-not-allowed bg-gray-50"
-          : "cursor-pointer hover:shadow-lg hover:border-primary/50 group"
+          : "cursor-pointer hover:shadow-lg hover:border-primary/50 group",
       )}
       onClick={isDisabled ? undefined : onClick}
     >
@@ -62,7 +62,7 @@ const UniversityCard = ({
           <Building2
             className={cn(
               "h-8 w-8 sm:h-10 sm:w-10",
-              isDisabled ? "text-gray-400" : "text-gray-600"
+              isDisabled ? "text-gray-400" : "text-gray-600",
             )}
           />
         </div>
@@ -70,7 +70,7 @@ const UniversityCard = ({
           <h3
             className={cn(
               "font-bold text-lg sm:text-xl line-clamp-1",
-              isDisabled ? "text-gray-500" : "text-gray-900"
+              isDisabled ? "text-gray-500" : "text-gray-900",
             )}
           >
             {university.name}

@@ -74,7 +74,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
       label: "Phone",
       type: "tel",
       placeholder: "Enter phone number",
-    }
+    },
   ];
 
   return (
@@ -143,7 +143,6 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                 </p>
               )}
             </div>
-           
           </div>
 
           <div className="flex justify-end space-x-3 pt-4">

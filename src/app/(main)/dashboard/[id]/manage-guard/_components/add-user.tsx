@@ -62,7 +62,7 @@ const AddGuardModal: React.FC<AddGuardModalProps> = ({
             reset();
           }
         },
-      }
+      },
     );
   };
 

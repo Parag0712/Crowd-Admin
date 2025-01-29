@@ -27,7 +27,8 @@ const UserTable = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [selectedUniversity, setSelectedUniversity] = useState<University | null>(null);
+  const [selectedUniversity, setSelectedUniversity] =
+    useState<University | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const { mutate: deleteUserMutation } = useDeleteUser();
   const toast = useCustomToast();
@@ -38,7 +39,6 @@ const UserTable = () => {
     isLoading,
     refetch: refetchUniversities,
   } = useUniversity(currentPage, pageSize);
-
 
   const handleViewDetails = (user: University) => {
     setSelectedUniversity(user);
@@ -96,7 +96,6 @@ const UserTable = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full sm:max-w-sm py-2 px-4 rounded-lg focus:ring-primary focus:border-primary"
           />
-         
         </div>
         <Button
           onClick={() => setIsAddModalOpen(true)}

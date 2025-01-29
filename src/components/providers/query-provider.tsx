@@ -16,7 +16,7 @@ export default function QueryProvider({
             refetchOnWindowFocus: false,
           },
         },
-      })
+      }),
   );
 
   return (

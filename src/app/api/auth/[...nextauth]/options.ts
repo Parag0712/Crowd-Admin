@@ -17,14 +17,14 @@ export const authOptions: NextAuthOptions = {
             JSON.stringify({
               statusCode: 400,
               message: "Email and password are required",
-            })
+            }),
           );
         }
         console.log(credentials);
 
         const response = await loginAdmin(
           credentials.email,
-          credentials.password
+          credentials.password,
         );
         console.log(response);
         if (response.success && response.data) {
@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
           JSON.stringify({
             statusCode: response.statusCode,
             message: response.message,
-          })
+          }),
         );
       },
     }),

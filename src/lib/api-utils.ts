@@ -6,7 +6,7 @@ type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 export async function fetchHandler<T>(
   url: string,
   method: HttpMethod,
-  options?: object
+  options?: object,
 ): Promise<T> {
   try {
     const response = await axiosInstance.request<T>({
@@ -26,7 +26,7 @@ export async function fetchHandler<T>(
 export async function fetchHandlerWithFormData<T>(
   url: string,
   method: HttpMethod,
-  options?: object
+  options?: object,
 ): Promise<T> {
   try {
     const headers =

@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${openSans.variable} antialiased`}>
-      <AuthProvider>
+        <AuthProvider>
           <QueryProvider>
             <React.Suspense fallback={<Loader />}>
               <UniversityProvider>
@@ -37,7 +37,7 @@ export default function RootLayout({
             </React.Suspense>
           </QueryProvider>
         </AuthProvider>
-        </body>
+      </body>
     </html>
   );
 }

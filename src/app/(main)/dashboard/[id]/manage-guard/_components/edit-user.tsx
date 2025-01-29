@@ -9,7 +9,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useEditGuard } from "@/hooks/guard";
 import { guardEditSchema } from "@/schemas/guard";
 import { userEditSchema } from "@/schemas/users";
@@ -65,16 +71,19 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       Object.entries(data).filter(([key, value]) => {
         console.log(`Processing field: ${key}`);
         return value !== undefined && value !== "";
-      })
+      }),
     ) as Required<Omit<FormInputs, "password">>;
 
     editGuardMutation(
-      { guardId: Number(selectedGuard.id), guardData: {
-        ...updatedData,
-        universityId: universityId,
-        gateId: selectedGuard.gateId ?? undefined,
-        isActive: UserStatus.ACTIVE || UserStatus.INACTIVE,
-      } },
+      {
+        guardId: Number(selectedGuard.id),
+        guardData: {
+          ...updatedData,
+          universityId: universityId,
+          gateId: selectedGuard.gateId ?? undefined,
+          isActive: UserStatus.ACTIVE || UserStatus.INACTIVE,
+        },
+      },
       {
         onSuccess: (response) => {
           if (response.success) {
@@ -83,7 +92,7 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
             reset();
           }
         },
-      }
+      },
     );
   };
 
@@ -112,9 +121,7 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       type: "tel",
       placeholder: "Enter Employee ID",
     },
-
   ];
-
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -152,9 +159,9 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
                 )}
               </div>
             ))}
-            </div>
+          </div>
 
-            <div className="space-y-2">
+          <div className="space-y-2">
             <Label htmlFor="isActive" className="text-sm font-semibold">
               Status <span className="text-red-500">*</span>
             </Label>
@@ -169,7 +176,7 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
                   <SelectTrigger className="w-full h-10">
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
-                  <SelectContent> 
+                  <SelectContent>
                     {[
                       {
                         label: "ACTIVE",
@@ -197,24 +204,23 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
             )}
           </div>
 
-
-            <div className="flex justify-end space-x-3 pt-4">
-              <Button
-                type="button"
-                onClick={onClose}
-                variant="outline"
-                className="px-6"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isPending}
-                className="px-6 bg-primary"
-              >
-                {isPending ? "Saving Changes..." : "Save Changes"}
-              </Button>
-            </div>
+          <div className="flex justify-end space-x-3 pt-4">
+            <Button
+              type="button"
+              onClick={onClose}
+              variant="outline"
+              className="px-6"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="px-6 bg-primary"
+            >
+              {isPending ? "Saving Changes..." : "Save Changes"}
+            </Button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

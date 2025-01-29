@@ -20,7 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 type FormInputs = z.infer<typeof gateCreateSchema>;
-  
+
 interface AddGateModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -60,7 +60,7 @@ const AddGateModal: React.FC<AddGateModalProps> = ({
             reset();
           }
         },
-      }
+      },
     );
   };
 
@@ -82,7 +82,7 @@ const AddGateModal: React.FC<AddGateModalProps> = ({
       label: "Location",
       type: "text",
       placeholder: "Enter location",
-    }
+    },
   ];
 
   return (
@@ -122,7 +122,6 @@ const AddGateModal: React.FC<AddGateModalProps> = ({
               </div>
             ))}
           </div>
-
 
           <div className="flex justify-end space-x-3 pt-4">
             <Button

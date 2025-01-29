@@ -9,7 +9,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useEditGate } from "@/hooks/gate";
 import { gateUpdateSchema } from "@/schemas/gate";
 import { Gate } from "@/types/index.d";
@@ -63,14 +69,17 @@ const EditGateModal: React.FC<EditGateModalProps> = ({
       Object.entries(data).filter(([key, value]) => {
         console.log(`Processing field: ${key}`);
         return value !== undefined && value !== "";
-      })
+      }),
     ) as Required<Omit<FormInputs, "password">>;
 
     editGateMutation(
-      { gateId: Number(selectedGate.id), gateData: {
-        ...updatedData,
-        universityId: universityId,
-        } },
+      {
+        gateId: Number(selectedGate.id),
+        gateData: {
+          ...updatedData,
+          universityId: universityId,
+        },
+      },
       {
         onSuccess: (response) => {
           if (response.success) {
@@ -79,7 +88,7 @@ const EditGateModal: React.FC<EditGateModalProps> = ({
             reset();
           }
         },
-      }
+      },
     );
   };
 
@@ -101,9 +110,8 @@ const EditGateModal: React.FC<EditGateModalProps> = ({
       label: "Location",
       type: "tel",
       placeholder: "Enter location",
-    }
+    },
   ];
-
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -141,9 +149,9 @@ const EditGateModal: React.FC<EditGateModalProps> = ({
                 )}
               </div>
             ))}
-            </div>
+          </div>
 
-            <div className="space-y-2">
+          <div className="space-y-2">
             <Label htmlFor="isActive" className="text-sm font-semibold">
               Status <span className="text-red-500">*</span>
             </Label>
@@ -158,7 +166,7 @@ const EditGateModal: React.FC<EditGateModalProps> = ({
                   <SelectTrigger className="w-full h-10">
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
-                  <SelectContent> 
+                  <SelectContent>
                     {[
                       {
                         label: "ACTIVE",
@@ -186,24 +194,23 @@ const EditGateModal: React.FC<EditGateModalProps> = ({
             )}
           </div>
 
-
-            <div className="flex justify-end space-x-3 pt-4">
-              <Button
-                type="button"
-                onClick={onClose}
-                variant="outline"
-                className="px-6"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isPending}
-                className="px-6 bg-primary"
-              >
-                {isPending ? "Saving Changes..." : "Save Changes"}
-              </Button>
-            </div>
+          <div className="flex justify-end space-x-3 pt-4">
+            <Button
+              type="button"
+              onClick={onClose}
+              variant="outline"
+              className="px-6"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="px-6 bg-primary"
+            >
+              {isPending ? "Saving Changes..." : "Save Changes"}
+            </Button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

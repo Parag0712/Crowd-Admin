@@ -35,10 +35,10 @@ export const columns = ({
     accessorKey: "email",
     header: "Email",
   },
-{
-  accessorKey: "employeeId",
-  header: "Employee Id",
-},
+  {
+    accessorKey: "employeeId",
+    header: "Employee Id",
+  },
   {
     accessorKey: "isActive",
     header: "Active",

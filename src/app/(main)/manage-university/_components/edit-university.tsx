@@ -67,7 +67,7 @@ const EditUniversityModal: React.FC<EditUniversityModalProps> = ({
       Object.entries(data).filter(([key, value]) => {
         console.log(`Processing field: ${key}`);
         return value !== undefined && value !== "";
-      })
+      }),
     ) as Required<Omit<FormInputs, "password">>;
 
     editUniversityMutation(
@@ -86,7 +86,7 @@ const EditUniversityModal: React.FC<EditUniversityModalProps> = ({
             reset();
           }
         },
-      }
+      },
     );
   };
 

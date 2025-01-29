@@ -50,7 +50,6 @@ const mainLinks: SideLink[] = [
     href: "/manage-university",
     icon: <UserCheck size={18} />,
   },
- 
 ];
 
 const getProjectLinks = (projectId: string): SideLink[] => [
@@ -78,7 +77,7 @@ const getProjectLinks = (projectId: string): SideLink[] => [
     href: `/manage-guard/${projectId}`,
     icon: <Building2 size={18} />,
   },
- 
+
   {
     title: "Manage Flat",
     label: "",
@@ -102,7 +101,7 @@ const getProjectLinks = (projectId: string): SideLink[] => [
         label: "",
         href: `/manage-project/${projectId}/meter-log`,
         icon: <ScrollText size={18} />,
-      }
+      },
     ],
   },
   {
@@ -161,7 +160,7 @@ const getProjectLinks = (projectId: string): SideLink[] => [
 
 export const getNavigationLinks = (
   isProjectPage: boolean,
-  projectId: string | null
+  projectId: string | null,
 ): SideLink[] => {
   if (isProjectPage && projectId) {
     return getProjectLinks(projectId);

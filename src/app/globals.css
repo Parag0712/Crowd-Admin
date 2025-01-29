@@ -14,8 +14,8 @@ body {
 
 @layer base {
   :root {
-    --font-poppins: 'Open Sans', sans-serif;
-    --gradient: #000C40;
+    --font-poppins: "Open Sans", sans-serif;
+    --gradient: #000c40;
     --background: 243 100% 98.26%;
     --foreground: 243 10% 0.52%;
 

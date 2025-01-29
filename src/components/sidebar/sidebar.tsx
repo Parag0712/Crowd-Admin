@@ -57,7 +57,7 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
         `fixed left-0 right-0 top-0 z-50 w-full border-r-2 border-r-muted transition-[width] md:bottom-0 md:right-auto md:h-svh ${
           isCollapsed ? "md:w-14" : "md:w-64"
         }`,
-        className
+        className,
       )}
     >
       <div
@@ -107,7 +107,7 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
           id="sidebar-menu"
           className={cn(
             "z-40 h-full flex-1 overflow-auto",
-            navOpened ? "max-h-screen" : "max-h-0 py-0 md:max-h-screen md:py-2"
+            navOpened ? "max-h-screen" : "max-h-0 py-0 md:max-h-screen md:py-2",
           )}
           closeNav={() => setNavOpened(false)}
           isCollapsed={isCollapsed}
@@ -118,7 +118,7 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
         <div
           className={cn(
             "border-t border-border p-4",
-            isCollapsed ? "flex justify-center" : ""
+            isCollapsed ? "flex justify-center" : "",
           )}
         >
           <Button
@@ -128,7 +128,7 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
               "w-full transition-all duration-200 hover:bg-primary/15 hover:text-primary",
               isCollapsed
                 ? "h-11 w-11 rounded-lg p-0"
-                : "h-11 justify-start gap-3 rounded-lg px-4"
+                : "h-11 justify-start gap-3 rounded-lg px-4",
             )}
             title="Logout"
           >
@@ -173,7 +173,7 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
             <ChevronLeft
               className={cn(
                 "h-5 w-5 transition-transform duration-200",
-                isCollapsed && "rotate-180"
+                isCollapsed && "rotate-180",
               )}
             />
           </Button>

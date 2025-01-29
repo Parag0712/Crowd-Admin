@@ -22,7 +22,7 @@ export const userService = {
   getAll: (page: number, pageSize: number) =>
     fetchHandler<ApiResponse>(
       `${USER_API.GET_ALL}?page=${page}&pageSize=${pageSize}`,
-      "GET"
+      "GET",
     ),
 
   getById: (userId: number) =>

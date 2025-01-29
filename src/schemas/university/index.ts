@@ -20,4 +20,3 @@ export const universityEditSchema = z.object({
     .optional(),
   isActive: z.enum(["ACTIVE", "INACTIVE"]).default("ACTIVE"),
 });
-

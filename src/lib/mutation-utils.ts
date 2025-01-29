@@ -10,7 +10,7 @@ export const handleMutationSuccess = (
   response: ApiResponse,
   toast: ToastInterface,
   queryClient: QueryClient,
-  queryKey: string[]
+  queryKey: string[],
 ) => {
   if (response.success) {
     toast.success({ message: response.message });
@@ -20,7 +20,7 @@ export const handleMutationSuccess = (
 
 export const handleMutationError = (
   error: { message?: string },
-  toast: ToastInterface
+  toast: ToastInterface,
 ) => {
   if (error.message) {
     toast.error({ message: error.message });

@@ -4,7 +4,7 @@ import { LoginResponse } from "@/types";
 async function fetchHandler<T>(
   url: string,
   method: "GET" | "POST" | "PUT" | "DELETE",
-  options?: object
+  options?: object,
 ): Promise<T> {
   try {
     const response = await axiosInstance.request<T>({
@@ -34,7 +34,7 @@ async function fetchHandler<T>(
 
 export async function loginAdmin(
   email: string,
-  password: string
+  password: string,
 ): Promise<LoginResponse> {
   return fetchHandler<LoginResponse>("/admin/login", "POST", {
     email,
@@ -51,10 +51,10 @@ export async function forgetPassword(email: string): Promise<LoginResponse> {
 export async function resetPassword(
   token: string,
   password: string,
-  email: string
+  email: string,
 ): Promise<LoginResponse> {
   return fetchHandler<LoginResponse>("/admin/reset-password", "POST", {
-     email,
+    email,
     token,
     password,
   });
@@ -62,7 +62,7 @@ export async function resetPassword(
 
 export async function importFile(
   file: File,
-  project_id: number
+  project_id: number,
 ): Promise<LoginResponse> {
   return fetchHandler<LoginResponse>("/import-data", "POST", {
     file,

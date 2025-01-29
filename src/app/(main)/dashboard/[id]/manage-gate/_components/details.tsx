@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog";
 import { Gate } from "@/types";
 
-
 interface GateDetailsProps {
   isOpen: boolean;
   onClose: () => void;
@@ -53,7 +52,7 @@ const GateDetails: React.FC<GateDetailsProps> = ({ isOpen, onClose, gate }) => {
                     {gate.description}
                   </p>
                 </div>
-               
+
                 <div className="bg-gray-50 p-2 rounded-lg">
                   <p className="text-xs text-gray-500">Phone</p>
                   <p className="font-medium text-sm text-gray-900">
@@ -68,7 +67,7 @@ const GateDetails: React.FC<GateDetailsProps> = ({ isOpen, onClose, gate }) => {
                 Account Status
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="bg-gray-50 p-2 rounded-lg">
+                <div className="bg-gray-50 p-2 rounded-lg">
                   <p className="text-xs text-gray-500">Status</p>
                   <p className="font-medium text-sm text-gray-900">
                     {gate.isActive ? "Active" : "Inactive"}

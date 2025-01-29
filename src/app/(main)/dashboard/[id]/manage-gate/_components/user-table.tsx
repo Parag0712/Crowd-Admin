@@ -44,7 +44,7 @@ const GateTable = ({ universityId }: { universityId: number }) => {
   const toast = useCustomToast();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
-  
+
   const {
     data: gatesResponse,
     isLoading,
@@ -66,7 +66,7 @@ const GateTable = ({ universityId }: { universityId: number }) => {
       deleteGateMutation(gateId, {
         onSuccess: (response) => {
           if (response.success) {
-            refetchGates(); 
+            refetchGates();
             toast.success({ message: "Gate deleted successfully" });
           }
         },
@@ -83,7 +83,7 @@ const GateTable = ({ universityId }: { universityId: number }) => {
 
   const handleSuccess = () => {
     refetchGates();
-    handleModalClose(); 
+    handleModalClose();
   };
 
   const handlePageChange = (newPage: number) => {

@@ -19,5 +19,5 @@ export const userEditSchema = z.object({
     .length(10, "Phone number must be 10 digits")
     .regex(/^\d{10}$/, "Phone number must be a valid 10-digit number")
     .optional(),
-  isActive: z.enum(["ACTIVE", "INACTIVE"]).default("ACTIVE")
+  isActive: z.enum(["ACTIVE", "INACTIVE"]).default("ACTIVE"),
 });

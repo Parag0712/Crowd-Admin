@@ -58,7 +58,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
       Object.entries(data).filter(([key, value]) => {
         console.log(`Processing field: ${key}`);
         return value !== undefined && value !== "";
-      })
+      }),
     ) as Required<Omit<FormInputs, "password">>;
 
     editUserMutation(
@@ -77,7 +77,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
             reset();
           }
         },
-      }
+      },
     );
   };
 
