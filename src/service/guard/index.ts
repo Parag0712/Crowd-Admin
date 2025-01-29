@@ -7,7 +7,6 @@ const GUARD_API = {
   DELETE: (id: number) => `/guard/${id}`,
   GET_ALL: "/guard",
   GET_BY_ID: (id: number) => `/guard/${id}`,
-  GET_BY_UNIVERSITY_ID: (id: number) => `/guard/university/${id}`,
 } as const;
 
 export const guardService = {
@@ -25,9 +24,9 @@ export const guardService = {
       page && pageSize
         ? `${GUARD_API.GET_ALL}?page=${page}&pageSize=${pageSize}&universityId=${universityId}`
         : GUARD_API.GET_ALL,
-      "GET"
-  ),
-    
+      "GET",
+    ),
+
   getById: (guardId: number) =>
     fetchHandler<ApiResponse>(GUARD_API.GET_BY_ID(guardId), "GET"),
 };

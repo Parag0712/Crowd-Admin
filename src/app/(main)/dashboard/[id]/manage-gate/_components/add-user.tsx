@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 // import { userCreateSchema } from "@/schemas/users/adduserschema";
 // import { useAddUser } from "@/hooks/users/manage-users";
@@ -13,46 +13,44 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAddGuard } from "@/hooks/guard";
-import { guardCreateSchema } from "@/schemas/guard";
+import { useAddGate } from "@/hooks/gate";
 
+import { gateCreateSchema } from "@/schemas/gate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { UserStatus } from "@/types/index.d";
-import { Eye, EyeOff } from "lucide-react";
 
-type FormInputs = z.infer<typeof guardCreateSchema>;
-
-interface AddGuardModalProps {
+type FormInputs = z.infer<typeof gateCreateSchema>;
+  
+interface AddGateModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
   universityId: number;
 }
 
-const AddGuardModal: React.FC<AddGuardModalProps> = ({
+const AddGateModal: React.FC<AddGateModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
   universityId,
 }) => {
-  const { mutate: addGuardMutation, isPending } = useAddGuard();
-  const [showPassword, setShowPassword] = useState(false);
+  const { mutate: addGateMutation, isPending } = useAddGate();
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<FormInputs>({
-    resolver: zodResolver(guardCreateSchema),
+    resolver: zodResolver(gateCreateSchema),
   });
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    addGuardMutation(
+    addGateMutation(
       {
-        ...data,
+        location: data.location || "",
+        gateId: data.gateId || "",
+        description: data.description || "",
         universityId: universityId,
-        isActive: UserStatus.ACTIVE,
       },
       {
         onSuccess: (response) => {
@@ -68,29 +66,23 @@ const AddGuardModal: React.FC<AddGuardModalProps> = ({
 
   const formFields = [
     {
-      id: "name",
-      label: "Name",
+      id: "gateId",
+      label: "Gate ID",
       type: "text",
-      placeholder: "Enter name",
+      placeholder: "Enter gate ID",
     },
     {
-      id: "email",
-      label: "Email",
-      type: "email",
-      placeholder: "Enter email address",
-    },
-    {
-      id: "phoneNumber",
-      label: "Phone",
-      type: "tel",
-      placeholder: "Enter phone number",
-    },
-    {
-      id: "employeeId",
-      label: "Employee ID",
+      id: "description",
+      label: "Description",
       type: "text",
-      placeholder: "Enter employee ID",
+      placeholder: "Enter description",
     },
+    {
+      id: "location",
+      label: "Location",
+      type: "text",
+      placeholder: "Enter location",
+    }
   ];
 
   return (
@@ -101,10 +93,10 @@ const AddGuardModal: React.FC<AddGuardModalProps> = ({
       >
         <DialogHeader>
           <DialogTitle className="text-xl sm:text-2xl font-bold">
-            Add Guard
+            Add Gate
           </DialogTitle>
           <DialogDescription className="text-sm sm:text-base text-gray-600">
-            Fill out the form below to add a new guard.
+            Fill out the form below to add a new gate.
           </DialogDescription>
         </DialogHeader>
 
@@ -131,34 +123,6 @@ const AddGuardModal: React.FC<AddGuardModalProps> = ({
             ))}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-sm font-semibold">
-              Password <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative">
-              <Input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
-                {...register("password")}
-                className="w-full h-10 pr-10"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 px-3 text-gray-600"
-              >
-                {showPassword ? (
-                  <Eye className="h-5 w-5 text-gray-500" />
-                ) : (
-                  <EyeOff className="h-5 w-5 text-gray-500" />
-                )}
-              </button>
-            </div>
-            {errors.password && (
-              <p className="text-red-500 text-xs">{errors.password.message}</p>
-            )}
-          </div>
 
           <div className="flex justify-end space-x-3 pt-4">
             <Button
@@ -174,7 +138,7 @@ const AddGuardModal: React.FC<AddGuardModalProps> = ({
               disabled={isPending}
               className="px-6 bg-primary"
             >
-              {isPending ? "Adding User..." : "Add User"}
+              {isPending ? "Adding Gate..." : "Add Gate"}
             </Button>
           </div>
         </form>
@@ -183,4 +147,4 @@ const AddGuardModal: React.FC<AddGuardModalProps> = ({
   );
 };
 
-export default AddGuardModal;
+export default AddGateModal;

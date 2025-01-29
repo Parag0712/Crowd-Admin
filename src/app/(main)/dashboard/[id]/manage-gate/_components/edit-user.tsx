@@ -9,33 +9,32 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useEditGuard } from "@/hooks/guard";
-import { guardEditSchema } from "@/schemas/guard";
-import { userEditSchema } from "@/schemas/users";
-import { Guard, UserStatus } from "@/types/index.d";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useEditGate } from "@/hooks/gate";
+import { gateUpdateSchema } from "@/schemas/gate";
+import { Gate } from "@/types/index.d";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-type FormInputs = z.infer<typeof guardEditSchema>;
+type FormInputs = z.infer<typeof gateUpdateSchema>;
 
-interface EditGuardModalProps {
+interface EditGateModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  selectedGuard: Guard | null;
+  selectedGate: Gate | null;
   universityId: number;
 }
 
-const EditGuardModal: React.FC<EditGuardModalProps> = ({
+const EditGateModal: React.FC<EditGateModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
   universityId,
-  selectedGuard,
+  selectedGate,
 }) => {
-  const { mutate: editGuardMutation, isPending } = useEditGuard();
+  const { mutate: editGateMutation, isPending } = useEditGate();
 
   const {
     register,
@@ -45,21 +44,20 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
     formState: { errors },
     setValue,
   } = useForm<FormInputs>({
-    resolver: zodResolver(userEditSchema),
+    resolver: zodResolver(gateUpdateSchema),
   });
 
   useEffect(() => {
-    if (selectedGuard) {
-      setValue("name", selectedGuard.name || "");
-      setValue("email", selectedGuard.email || "");
-      setValue("phoneNumber", selectedGuard.phoneNumber || "");
-      setValue("employeeId", selectedGuard.employeeId || "");
-      setValue("isActive", selectedGuard.isActive || "ACTIVE");
+    if (selectedGate) {
+      setValue("gateId", selectedGate.gateId || "");
+      setValue("location", selectedGate.location || "");
+      setValue("description", selectedGate.description || "");
+      setValue("isActive", selectedGate.isActive || "ACTIVE");
     }
-  }, [selectedGuard, setValue]);
+  }, [selectedGate, setValue]);
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    if (!selectedGuard) return;
+    if (!selectedGate) return;
 
     const updatedData = Object.fromEntries(
       Object.entries(data).filter(([key, value]) => {
@@ -68,13 +66,11 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       })
     ) as Required<Omit<FormInputs, "password">>;
 
-    editGuardMutation(
-      { guardId: Number(selectedGuard.id), guardData: {
+    editGateMutation(
+      { gateId: Number(selectedGate.id), gateData: {
         ...updatedData,
         universityId: universityId,
-        gateId: selectedGuard.gateId ?? undefined,
-        isActive: UserStatus.ACTIVE || UserStatus.INACTIVE,
-      } },
+        } },
       {
         onSuccess: (response) => {
           if (response.success) {
@@ -89,30 +85,23 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
 
   const formFields = [
     {
-      id: "name",
-      label: "Name",
+      id: "gateId",
+      label: "Gate ID",
       type: "text",
-      placeholder: "Enter name",
+      placeholder: "Enter gate ID",
     },
     {
-      id: "email",
-      label: "Email",
-      type: "email",
-      placeholder: "Enter email address",
+      id: "description",
+      label: "Description",
+      type: "text",
+      placeholder: "Enter description",
     },
     {
-      id: "phoneNumber",
-      label: "Phone Number",
+      id: "location",
+      label: "Location",
       type: "tel",
-      placeholder: "Enter phone number",
-    },
-    {
-      id: "employeeId",
-      label: "Employee ID",
-      type: "tel",
-      placeholder: "Enter Employee ID",
-    },
-
+      placeholder: "Enter location",
+    }
   ];
 
 
@@ -124,10 +113,10 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       >
         <DialogHeader>
           <DialogTitle className="text-xl sm:text-2xl font-bold">
-            Edit Guard
+            Edit Gate
           </DialogTitle>
           <DialogDescription className="text-sm sm:text-base text-gray-600">
-            Fill out the form below to edit this guard.
+            Fill out the form below to edit this gate.
           </DialogDescription>
         </DialogHeader>
 
@@ -221,4 +210,4 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
   );
 };
 
-export default EditGuardModal;
+export default EditGateModal;

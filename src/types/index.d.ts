@@ -5,6 +5,11 @@ export enum UserStatus {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
 }
+
+export enum Status {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+}
 export interface LoginResponse {
   success: boolean;
   statusCode: number;
@@ -29,7 +34,7 @@ export interface UserPayload {
 }
 
 export interface ExtendedUser extends User {
-  id: string | number;  
+  id: string | number;
   name: string;
   email: string;
   createdAt: string;
@@ -39,8 +44,26 @@ export interface ExtendedUser extends User {
   role: UserRole;
 }
 
-// Guard
+// University
 
+export interface UniversityPayload {
+  name: string;
+  address: string;
+  phoneNumber: string;
+  isActive?: UserStatus;
+}
+
+export interface University {
+  id: number;
+  name: string;
+  address: string;
+  phoneNumber: string;
+  isActive?: UserStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Guard
 export interface GuardPayload {
   name: string;
   universityId: number;
@@ -72,27 +95,29 @@ export interface Guard {
   };
 }
 
-
-// University
-
-export interface UniversityPayload {
-  name: string;
-  address: string;
-  phoneNumber: string;
-  isActive?: UserStatus;
+// GATE
+export interface GatePayload {
+  universityId: number;
+  location: string;
+  gateId: string;
+  description: string;
 }
 
-export interface University {
+export interface Gate {
   id: number;
-  name: string;
-  address: string;
-  phoneNumber: string;
-  isActive?: UserStatus;
+  gateId: string;
+  location: string;
+  isActive: Status;
+  description: string;
   createdAt: string;
+  securityGuards: [];
+  university: {
+    name: string;
+    id: number;
+    isActive: string;
+  };
   updatedAt: string;
 }
-
-
 
 export interface CityPayload {
   city: string;
