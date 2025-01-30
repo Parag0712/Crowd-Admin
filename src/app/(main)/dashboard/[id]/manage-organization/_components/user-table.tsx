@@ -36,7 +36,8 @@ const OrganizationTable = ({ universityId }: { universityId: number }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [selectedOrganization, setSelectedOrganization] = useState<Organization | null>(null);
+  const [selectedOrganization, setSelectedOrganization] =
+    useState<Organization | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
   const { mutate: deleteOrganizationMutation } = useDeleteOrganization();
@@ -62,7 +63,7 @@ const OrganizationTable = ({ universityId }: { universityId: number }) => {
 
   const handleDelete = (organizationId: number) => {
     if (window.confirm("Are you sure you want to delete this organization?")) {
-        deleteOrganizationMutation(organizationId, {
+      deleteOrganizationMutation(organizationId, {
         onSuccess: (response) => {
           if (response.success) {
             refetchOrganizations();
@@ -90,24 +91,25 @@ const OrganizationTable = ({ universityId }: { universityId: number }) => {
   };
 
   const filteredOrganizations = React.useMemo(() => {
-    if (!organizationsResponse?.data ) return [];
+    if (!organizationsResponse?.data) return [];
 
     return Array.isArray(organizationsResponse.data)
-      ? organizationsResponse.data
-          .filter((organization: Organization) => {
-            const matchesSearch = Object.values(organization)
-              .join(" ")
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase());
-            return matchesSearch;
-          })
+      ? organizationsResponse.data.filter((organization: Organization) => {
+          const matchesSearch = Object.values(organization)
+            .join(" ")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+          return matchesSearch;
+        })
       : [];
   }, [organizationsResponse?.data, searchTerm]);
 
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Organization Management</h2>
+        <h2 className="text-2xl font-bold tracking-tight">
+          Organization Management
+        </h2>
         <p className="text-muted-foreground">
           View and manage all organizations in the system
         </p>
@@ -178,7 +180,7 @@ const OrganizationTable = ({ universityId }: { universityId: number }) => {
         />
       )}
       {isDetailsModalOpen && selectedOrganization && (
-          <OrganizationDetails
+        <OrganizationDetails
           isOpen={isDetailsModalOpen}
           onClose={handleModalClose}
           organization={selectedOrganization as Organization}

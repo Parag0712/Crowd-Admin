@@ -13,7 +13,7 @@ interface UserDetailsProps {
   onClose: () => void;
   principal: Principal | null;
 }
-  
+
 const UserDetails: React.FC<UserDetailsProps> = ({
   isOpen,
   onClose,

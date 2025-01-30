@@ -25,7 +25,7 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
 
   const isProjectPage = pathname.startsWith("/dashboard/");
   const projectId = isProjectPage ? university?.id : null;
-  
+
   const handleLogout = async () => {
     await signOut({
       callbackUrl: "/sign-in",
@@ -40,7 +40,6 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
       document.body.classList.remove("overflow-hidden");
     }
   }, [navOpened]);
-
 
   const getFilteredProjectLinks = (projectId: string): SideLink[] => {
     const links = getNavigationLinks(true, projectId);

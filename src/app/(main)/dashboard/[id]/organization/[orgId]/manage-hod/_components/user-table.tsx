@@ -62,7 +62,7 @@ const HodTable = ({ orgId }: { orgId: number }) => {
 
   const handleDelete = (hodId: number) => {
     if (window.confirm("Are you sure you want to delete this hod?")) {
-        deleteHodMutation(hodId, {
+      deleteHodMutation(hodId, {
         onSuccess: (response) => {
           if (response.success) {
             refetchHods();
@@ -90,17 +90,16 @@ const HodTable = ({ orgId }: { orgId: number }) => {
   };
 
   const filteredOrganizations = React.useMemo(() => {
-    if (!organizationsResponse?.data ) return [];
+    if (!organizationsResponse?.data) return [];
 
     return Array.isArray(organizationsResponse.data)
-      ? organizationsResponse.data
-          .filter((organization: Organization) => {
-            const matchesSearch = Object.values(organization)
-              .join(" ")
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase());
-            return matchesSearch;
-          })
+      ? organizationsResponse.data.filter((organization: Organization) => {
+          const matchesSearch = Object.values(organization)
+            .join(" ")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+          return matchesSearch;
+        })
       : [];
   }, [organizationsResponse?.data, searchTerm]);
 
@@ -178,7 +177,7 @@ const HodTable = ({ orgId }: { orgId: number }) => {
         />
       )}
       {isDetailsModalOpen && selectedHod && (
-          <HodDetails
+        <HodDetails
           isOpen={isDetailsModalOpen}
           onClose={handleModalClose}
           hod={selectedHod as Hod}

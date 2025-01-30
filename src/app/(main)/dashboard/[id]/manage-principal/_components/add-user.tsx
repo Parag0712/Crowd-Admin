@@ -45,7 +45,7 @@ const AddGuardModal: React.FC<AddPrincipalModalProps> = ({
     register,
     handleSubmit,
     reset,
-    control,  
+    control,
     formState: { errors },
   } = useForm<FormInputs>({
     resolver: zodResolver(principalCreateSchema),
@@ -65,7 +65,7 @@ const AddGuardModal: React.FC<AddPrincipalModalProps> = ({
             reset();
           }
         },
-      }
+      },
     );
   };
 

@@ -80,8 +80,9 @@ const EditPrincipalModal: React.FC<EditPrincipalModalProps> = ({
       {
         principalId: Number(selectedPrincipal.id),
         principalData: {
-          ...updatedData, 
-          isActive: updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
+          ...updatedData,
+          isActive:
+            updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
         },
       },
       {
@@ -114,7 +115,7 @@ const EditPrincipalModal: React.FC<EditPrincipalModalProps> = ({
       label: "Phone Number",
       type: "tel",
       placeholder: "Enter phone number",
-    }
+    },
   ];
 
   return (

@@ -62,7 +62,7 @@ const BranchTable = ({ orgId }: { orgId: number }) => {
 
   const handleDelete = (branchId: number) => {
     if (window.confirm("Are you sure you want to delete this branch?")) {
-        deleteBranchMutation(branchId, {
+      deleteBranchMutation(branchId, {
         onSuccess: (response) => {
           if (response.success) {
             refetchBranches();
@@ -90,17 +90,16 @@ const BranchTable = ({ orgId }: { orgId: number }) => {
   };
 
   const filteredOrganizations = React.useMemo(() => {
-    if (!organizationsResponse?.data ) return [];
+    if (!organizationsResponse?.data) return [];
 
     return Array.isArray(organizationsResponse.data)
-      ? organizationsResponse.data
-          .filter((organization: Organization) => {
-            const matchesSearch = Object.values(organization)
-              .join(" ")
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase());
-            return matchesSearch;
-          })
+      ? organizationsResponse.data.filter((organization: Organization) => {
+          const matchesSearch = Object.values(organization)
+            .join(" ")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+          return matchesSearch;
+        })
       : [];
   }, [organizationsResponse?.data, searchTerm]);
 
@@ -178,7 +177,7 @@ const BranchTable = ({ orgId }: { orgId: number }) => {
         />
       )}
       {isDetailsModalOpen && selectedBranch && (
-          <BranchDetails
+        <BranchDetails
           isOpen={isDetailsModalOpen}
           onClose={handleModalClose}
           branch={selectedBranch as Branch}

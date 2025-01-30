@@ -77,7 +77,8 @@ const EditOrganizationModal: React.FC<EditOrganizationModalProps> = ({
         organizationId: Number(selectedOrganization.id),
         organizationData: {
           ...updatedData,
-          isActive: updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
+          isActive:
+            updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
           universityId: universityId,
         },
       },

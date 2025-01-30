@@ -79,7 +79,8 @@ const EditHodModal: React.FC<EditHodModalProps> = ({
         hodId: Number(selectedHod.id),
         hodData: {
           ...updatedData,
-          isActive: updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
+          isActive:
+            updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
           branchId: branchId,
         },
       },

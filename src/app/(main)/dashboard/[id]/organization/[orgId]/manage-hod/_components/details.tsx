@@ -14,11 +14,7 @@ interface HodDetailsProps {
   hod: Hod | null;
 }
 
-const HodDetails: React.FC<HodDetailsProps> = ({
-  isOpen,
-  onClose,
-  hod,
-}) => {
+const HodDetails: React.FC<HodDetailsProps> = ({ isOpen, onClose, hod }) => {
   if (!hod) return null;
 
   const formatDate = (dateString: string) => {

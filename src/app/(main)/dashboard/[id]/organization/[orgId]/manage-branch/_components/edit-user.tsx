@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Branch,  Status } from "@/types/index.d";
+import { Branch, Status } from "@/types/index.d";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -78,7 +78,8 @@ const EditBranchModal: React.FC<EditBranchModalProps> = ({
         branchId: Number(selectedBranch.id),
         branchData: {
           ...updatedData,
-          isActive: updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
+          isActive:
+            updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
           orgId: orgId,
         },
       },

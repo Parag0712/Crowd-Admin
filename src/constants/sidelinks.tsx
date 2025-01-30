@@ -146,7 +146,7 @@ const getProjectLinks = (projectId: string): SideLink[] => [
 
 export const getNavigationLinks = (
   isProjectPage: boolean,
-  projectId: string | null
+  projectId: string | null,
 ): SideLink[] => {
   if (isProjectPage && projectId) {
     return getProjectLinks(projectId);

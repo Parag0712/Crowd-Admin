@@ -57,18 +57,15 @@ const AddHodModal: React.FC<AddHodModalProps> = ({
   });
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    addHodMutation(
-      data,
-      {
-        onSuccess: (response) => {
-          if (response.success) {
-            onClose();
-            onSuccess();
-            reset();
-          }
-        },
-      }
-    );
+    addHodMutation(data, {
+      onSuccess: (response) => {
+        if (response.success) {
+          onClose();
+          onSuccess();
+          reset();
+        }
+      },
+    });
   };
 
   const formFields = [

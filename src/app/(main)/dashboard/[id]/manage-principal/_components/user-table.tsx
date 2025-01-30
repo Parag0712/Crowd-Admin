@@ -37,7 +37,9 @@ const PrincipalTable = ({ universityId }: { universityId: number }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [selectedPrincipal, setSelectedPrincipal] = useState<Principal | null>(null);
+  const [selectedPrincipal, setSelectedPrincipal] = useState<Principal | null>(
+    null,
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
   const { mutate: deletePrincipalMutation } = useDeletePrincipal();
@@ -111,7 +113,9 @@ const PrincipalTable = ({ universityId }: { universityId: number }) => {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Principal Management</h2>
+        <h2 className="text-2xl font-bold tracking-tight">
+          Principal Management
+        </h2>
         <p className="text-muted-foreground">
           View and manage all principals in the system
         </p>

@@ -81,7 +81,10 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
           ...updatedData,
           universityId: universityId,
           gateId: selectedGuard.gateId ?? undefined,
-          isActive: updatedData.isActive === "ACTIVE" ? UserStatus.ACTIVE : UserStatus.INACTIVE,
+          isActive:
+            updatedData.isActive === "ACTIVE"
+              ? UserStatus.ACTIVE
+              : UserStatus.INACTIVE,
         },
       },
       {
