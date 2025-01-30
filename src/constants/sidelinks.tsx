@@ -1,23 +1,9 @@
 import {
-  Users2,
-  UserCheck,
-  UserCog,
   Building,
   Building2,
   HomeIcon,
-  // Warehouse,
-  // Settings,
-  // Layers,
-  // MapPin,
-  // Mail,
-  // MessageSquare,
-  CircleDollarSign,
-  Gauge,
-  GaugeCircle,
-  FileSpreadsheet,
-  ScrollText,
-  ReceiptIndianRupee,
-  Printer,
+  UserCheck,
+  UserCog,
 } from "lucide-react";
 
 export interface NavLink {
@@ -54,113 +40,113 @@ const mainLinks: SideLink[] = [
 
 const getProjectLinks = (projectId: string): SideLink[] => [
   {
-    title: "Dashboard",
+    title: "Organization",
     label: "",
     href: `/dashboard`,
     icon: <HomeIcon size={18} />,
   },
   {
-    title: "Manage Org",
+    title: "Manage-Organization",
     label: "",
-    href: `/manage-org/${projectId}`,
+    href: `/dashboard/${projectId}/manage-organization/`,
     icon: <Building2 size={18} />,
   },
   {
     title: "Manage Gate",
     label: "",
-    href: `/manage-gate/${projectId}`,
+    href: `/dashboard/${projectId}/manage-gate/`,
     icon: <Building size={18} />,
   },
   {
     title: "Manage Guard",
     label: "",
-    href: `/manage-guard/${projectId}`,
+    href: `/dashboard/${projectId}/manage-guard/`,
     icon: <Building2 size={18} />,
   },
 
-  {
-    title: "Manage Flat",
-    label: "",
-    href: `/manage-project/${projectId}/manage-flat`,
-    icon: <HomeIcon size={18} />,
-  },
-  {
-    title: "Meter Management",
-    label: "",
-    href: "",
-    icon: <GaugeCircle size={18} />,
-    sub: [
-      {
-        title: "Meter",
-        label: "",
-        href: `/manage-project/${projectId}/meter`,
-        icon: <Gauge size={18} />,
-      },
-      {
-        title: "Meter Log",
-        label: "",
-        href: `/manage-project/${projectId}/meter-log`,
-        icon: <ScrollText size={18} />,
-      },
-    ],
-  },
-  {
-    title: "Customers",
-    label: "",
-    href: "",
-    icon: <Users2 size={18} />,
-    sub: [
-      {
-        title: "Approve Customers",
-        label: "",
-        href: `/manage-project/${projectId}/approve-customers`,
-        icon: <UserCheck size={18} />,
-      },
-      {
-        title: "Manage Customers",
-        label: "",
-        href: `/manage-project/${projectId}/manage-customers`,
-        icon: <UserCog size={18} />,
-      },
-    ],
-  },
-  {
-    title: "Bills (invoice bills)",
-    label: "",
-    href: `/manage-project/${projectId}/generate-bill`,
-    icon: <ScrollText size={18} />,
-  },
-  {
-    title: "Razorpay Bills",
-    label: "",
-    href: "",
-    icon: <CircleDollarSign size={18} />,
-    sub: [
-      {
-        title: "Billing",
-        label: "",
-        href: `/manage-project/${projectId}/billing`,
-        icon: <ReceiptIndianRupee size={18} />,
-      },
-    ],
-  },
-  {
-    title: "Generate Reports",
-    label: "",
-    href: `/manage-project/${projectId}/generate-reports`,
-    icon: <Printer size={18} />,
-  },
-  {
-    title: "Reports",
-    label: "",
-    href: `/manage-project/${projectId}/reports`,
-    icon: <FileSpreadsheet size={18} />,
-  },
+  // {
+  //   title: "Manage Flat",
+  //   label: "",
+  //   href: `/manage-project/${projectId}/manage-flat`,
+  //   icon: <HomeIcon size={18} />,
+  // },
+  // {
+  //   title: "Meter Management",
+  //   label: "",
+  //   href: "",
+  //   icon: <GaugeCircle size={18} />,
+  //   sub: [
+  //     {
+  //       title: "Meter",
+  //       label: "",
+  //       href: `/manage-project/${projectId}/meter`,
+  //       icon: <Gauge size={18} />,
+  //     },
+  //     {
+  //       title: "Meter Log",
+  //       label: "",
+  //       href: `/manage-project/${projectId}/meter-log`,
+  //       icon: <ScrollText size={18} />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Customers",
+  //   label: "",
+  //   href: "",
+  //   icon: <Users2 size={18} />,
+  //   sub: [
+  //     {
+  //       title: "Approve Customers",
+  //       label: "",
+  //       href: `/manage-project/${projectId}/approve-customers`,
+  //       icon: <UserCheck size={18} />,
+  //     },
+  //     {
+  //       title: "Manage Customers",
+  //       label: "",
+  //       href: `/manage-project/${projectId}/manage-customers`,
+  //       icon: <UserCog size={18} />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Bills (invoice bills)",
+  //   label: "",
+  //   href: `/manage-project/${projectId}/generate-bill`,
+  //   icon: <ScrollText size={18} />,
+  // },
+  // {
+  //   title: "Razorpay Bills",
+  //   label: "",
+  //   href: "",
+  //   icon: <CircleDollarSign size={18} />,
+  //   sub: [
+  //     {
+  //       title: "Billing",
+  //       label: "",
+  //       href: `/manage-project/${projectId}/billing`,
+  //       icon: <ReceiptIndianRupee size={18} />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Generate Reports",
+  //   label: "",
+  //   href: `/manage-project/${projectId}/generate-reports`,
+  //   icon: <Printer size={18} />,
+  // },
+  // {
+  //   title: "Reports",
+  //   label: "",
+  //   href: `/manage-project/${projectId}/reports`,
+  //   icon: <FileSpreadsheet size={18} />,
+  // },
 ];
 
 export const getNavigationLinks = (
   isProjectPage: boolean,
-  projectId: string | null,
+  projectId: string | null
 ): SideLink[] => {
   if (isProjectPage && projectId) {
     return getProjectLinks(projectId);

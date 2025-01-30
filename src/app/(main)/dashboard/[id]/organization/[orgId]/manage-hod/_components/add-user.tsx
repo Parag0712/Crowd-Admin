@@ -1,4 +1,6 @@
 "use client";
+import React, { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,81 +11,54 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { hodCreateSchema } from "@/schemas/hod";
+import { useAddHod } from "@/hooks/hod";
+import { useBranch } from "@/hooks/branch";
+import { Eye, EyeOff } from "lucide-react";
+import { Branch } from "@/types";
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectContent,
+  SelectItem,
 } from "@/components/ui/select";
-import { useEditGuard } from "@/hooks/guard";
-import { guardEditSchema } from "@/schemas/guard";
-import { userEditSchema } from "@/schemas/users";
-import { Guard, UserStatus } from "@/types/index.d";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
-type FormInputs = z.infer<typeof guardEditSchema>;
 
-interface EditGuardModalProps {
+type FormInputs = z.infer<typeof hodCreateSchema>;
+
+interface AddHodModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  selectedGuard: Guard | null;
-  universityId: number;
+  orgId: number;
 }
 
-const EditGuardModal: React.FC<EditGuardModalProps> = ({
+const AddHodModal: React.FC<AddHodModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
-  universityId,
-  selectedGuard,
+  orgId,
 }) => {
-  const { mutate: editGuardMutation, isPending } = useEditGuard();
+  const { mutate: addHodMutation, isPending } = useAddHod();
+  const { data: branch } = useBranch(orgId);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
     handleSubmit,
-    control,
     reset,
+    control,
     formState: { errors },
-    setValue,
   } = useForm<FormInputs>({
-    resolver: zodResolver(userEditSchema),
+    resolver: zodResolver(hodCreateSchema),
   });
 
-  useEffect(() => {
-    if (selectedGuard) {
-      setValue("name", selectedGuard.name || "");
-      setValue("email", selectedGuard.email || "");
-      setValue("phoneNumber", selectedGuard.phoneNumber || "");
-      setValue("employeeId", selectedGuard.employeeId || "");
-      setValue("isActive", selectedGuard.isActive || "ACTIVE");
-    }
-  }, [selectedGuard, setValue]);
-
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    if (!selectedGuard) return;
-
-    const updatedData = Object.fromEntries(
-      Object.entries(data).filter(([key, value]) => {
-        console.log(`Processing field: ${key}`);
-        return value !== undefined && value !== "";
-      }),
-    ) as Required<Omit<FormInputs, "password">>;
-
-    editGuardMutation(
-      {
-        guardId: Number(selectedGuard.id),
-        guardData: {
-          ...updatedData,
-          universityId: universityId,
-          gateId: selectedGuard.gateId ?? undefined,
-          isActive: updatedData.isActive === "ACTIVE" ? UserStatus.ACTIVE : UserStatus.INACTIVE,
-        },
-      },
+    addHodMutation(
+      data,
       {
         onSuccess: (response) => {
           if (response.success) {
@@ -92,7 +67,7 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
             reset();
           }
         },
-      },
+      }
     );
   };
 
@@ -107,7 +82,7 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       id: "email",
       label: "Email",
       type: "email",
-      placeholder: "Enter email address",
+      placeholder: "Enter email",
     },
     {
       id: "phoneNumber",
@@ -118,8 +93,8 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
     {
       id: "employeeId",
       label: "Employee ID",
-      type: "tel",
-      placeholder: "Enter Employee ID",
+      type: "text",
+      placeholder: "Enter employee ID",
     },
   ];
 
@@ -131,10 +106,10 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       >
         <DialogHeader>
           <DialogTitle className="text-xl sm:text-2xl font-bold">
-            Edit Guard
+            Add Branch
           </DialogTitle>
           <DialogDescription className="text-sm sm:text-base text-gray-600">
-            Fill out the form below to edit this guard.
+            Fill out the form below to add a new branch.
           </DialogDescription>
         </DialogHeader>
 
@@ -162,11 +137,40 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="password" className="text-sm font-semibold">
+              Password <span className="text-red-500">*</span>
+            </Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter password"
+                {...register("password")}
+                className="w-full h-10 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 px-3 text-gray-600"
+              >
+                {showPassword ? (
+                  <Eye className="h-5 w-5 text-gray-500" />
+                ) : (
+                  <EyeOff className="h-5 w-5 text-gray-500" />
+                )}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="text-red-500 text-xs">{errors.password.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="isActive" className="text-sm font-semibold">
-              Status <span className="text-red-500">*</span>
+              Branch <span className="text-red-500">*</span>
             </Label>
             <Controller
-              name="isActive"
+              name="branchId"
               control={control}
               render={({ field }) => (
                 <Select
@@ -177,30 +181,21 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
                     <SelectValue placeholder="Select a status" />
                   </SelectTrigger>
                   <SelectContent>
-                    {[
-                      {
-                        label: "ACTIVE",
-                        value: UserStatus.ACTIVE,
-                      },
-                      {
-                        label: "INACTIVE",
-                        value: UserStatus.INACTIVE,
-                      },
-                    ].map((status, index) => (
+                    {branch?.data.map((branch: Branch) => (
                       <SelectItem
-                        key={index}
-                        value={status.value.toString()}
+                        key={branch.id}
+                        value={branch.id.toString()}
                         className="cursor-pointer hover:bg-gray-100"
                       >
-                        {status.label}
+                        {branch.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               )}
             />
-            {errors.isActive && (
-              <p className="text-red-500 text-xs">{errors.isActive.message}</p>
+            {errors.branchId && (
+              <p className="text-red-500 text-xs">{errors.branchId.message}</p>
             )}
           </div>
 
@@ -218,7 +213,7 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
               disabled={isPending}
               className="px-6 bg-primary"
             >
-              {isPending ? "Saving Changes..." : "Save Changes"}
+              {isPending ? "Adding Branch..." : "Add Branch"}
             </Button>
           </div>
         </form>
@@ -227,4 +222,4 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
   );
 };
 
-export default EditGuardModal;
+export default AddHodModal;

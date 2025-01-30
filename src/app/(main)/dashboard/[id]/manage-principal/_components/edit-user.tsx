@@ -16,32 +16,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEditGuard } from "@/hooks/guard";
-import { guardEditSchema } from "@/schemas/guard";
+import { useGetOrganization } from "@/hooks/organization";
+import { useEditPrincipal } from "@/hooks/principal";
+import { principalEditSchema } from "@/schemas/principal";
 import { userEditSchema } from "@/schemas/users";
-import { Guard, UserStatus } from "@/types/index.d";
+import { Organization, Principal, Status, UserStatus } from "@/types/index.d";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-type FormInputs = z.infer<typeof guardEditSchema>;
+type FormInputs = z.infer<typeof principalEditSchema>;
 
-interface EditGuardModalProps {
+interface EditPrincipalModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  selectedGuard: Guard | null;
+  selectedPrincipal: Principal | null;
   universityId: number;
 }
 
-const EditGuardModal: React.FC<EditGuardModalProps> = ({
+const EditPrincipalModal: React.FC<EditPrincipalModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
   universityId,
-  selectedGuard,
+  selectedPrincipal,
 }) => {
-  const { mutate: editGuardMutation, isPending } = useEditGuard();
+  const { mutate: editPrincipalMutation, isPending } = useEditPrincipal();
+  const { data: organization } = useGetOrganization(universityId);
 
   const {
     register,
@@ -55,17 +57,17 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
   });
 
   useEffect(() => {
-    if (selectedGuard) {
-      setValue("name", selectedGuard.name || "");
-      setValue("email", selectedGuard.email || "");
-      setValue("phoneNumber", selectedGuard.phoneNumber || "");
-      setValue("employeeId", selectedGuard.employeeId || "");
-      setValue("isActive", selectedGuard.isActive || "ACTIVE");
+    if (selectedPrincipal) {
+      setValue("name", selectedPrincipal.name || "");
+      setValue("email", selectedPrincipal.email || "");
+      setValue("phoneNumber", selectedPrincipal.phoneNumber || "");
+      setValue("isActive", selectedPrincipal.isActive || "ACTIVE");
+      setValue("orgId", selectedPrincipal.organizationsAsPrincipal.id || 0);
     }
-  }, [selectedGuard, setValue]);
+  }, [selectedPrincipal, setValue]);
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    if (!selectedGuard) return;
+    if (!selectedPrincipal) return;
 
     const updatedData = Object.fromEntries(
       Object.entries(data).filter(([key, value]) => {
@@ -74,14 +76,12 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       }),
     ) as Required<Omit<FormInputs, "password">>;
 
-    editGuardMutation(
+    editPrincipalMutation(
       {
-        guardId: Number(selectedGuard.id),
-        guardData: {
-          ...updatedData,
-          universityId: universityId,
-          gateId: selectedGuard.gateId ?? undefined,
-          isActive: updatedData.isActive === "ACTIVE" ? UserStatus.ACTIVE : UserStatus.INACTIVE,
+        principalId: Number(selectedPrincipal.id),
+        principalData: {
+          ...updatedData, 
+          isActive: updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
         },
       },
       {
@@ -114,13 +114,7 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       label: "Phone Number",
       type: "tel",
       placeholder: "Enter phone number",
-    },
-    {
-      id: "employeeId",
-      label: "Employee ID",
-      type: "tel",
-      placeholder: "Enter Employee ID",
-    },
+    }
   ];
 
   return (
@@ -131,10 +125,10 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       >
         <DialogHeader>
           <DialogTitle className="text-xl sm:text-2xl font-bold">
-            Edit Guard
+            Edit Principal
           </DialogTitle>
           <DialogDescription className="text-sm sm:text-base text-gray-600">
-            Fill out the form below to edit this guard.
+            Fill out the form below to edit this principal.
           </DialogDescription>
         </DialogHeader>
 
@@ -160,7 +154,39 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
               </div>
             ))}
           </div>
-
+          <div className="space-y-2">
+            <Label htmlFor="isActive" className="text-sm font-semibold">
+              Organization <span className="text-red-500">*</span>
+            </Label>
+            <Controller
+              name="orgId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value?.toString()}
+                >
+                  <SelectTrigger className="w-full h-10">
+                    <SelectValue placeholder="Select a status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {organization?.data.map((org: Organization) => (
+                      <SelectItem
+                        key={org.id}
+                        value={org.id.toString()}
+                        className="cursor-pointer hover:bg-gray-100"
+                      >
+                        {org.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.orgId && (
+              <p className="text-red-500 text-xs">{errors.orgId.message}</p>
+            )}
+          </div>
           <div className="space-y-2">
             <Label htmlFor="isActive" className="text-sm font-semibold">
               Status <span className="text-red-500">*</span>
@@ -227,4 +253,4 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
   );
 };
 
-export default EditGuardModal;
+export default EditPrincipalModal;

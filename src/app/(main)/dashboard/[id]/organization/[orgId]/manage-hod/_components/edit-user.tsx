@@ -16,33 +16,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEditGuard } from "@/hooks/guard";
-import { guardEditSchema } from "@/schemas/guard";
-import { userEditSchema } from "@/schemas/users";
-import { Guard, UserStatus } from "@/types/index.d";
+import { Branch, Hod, Status } from "@/types/index.d";
+import { useBranch } from "@/hooks/branch";
+import { useEditHod } from "@/hooks/hod";
+import { hodEditSchema } from "@/schemas/hod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-type FormInputs = z.infer<typeof guardEditSchema>;
+type FormInputs = z.infer<typeof hodEditSchema>;
 
-interface EditGuardModalProps {
+interface EditHodModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  selectedGuard: Guard | null;
-  universityId: number;
+  selectedHod: Hod | null;
+  branchId: number;
 }
 
-const EditGuardModal: React.FC<EditGuardModalProps> = ({
+const EditHodModal: React.FC<EditHodModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
-  universityId,
-  selectedGuard,
+  branchId,
+  selectedHod,
 }) => {
-  const { mutate: editGuardMutation, isPending } = useEditGuard();
-
+  const { mutate: editHodMutation, isPending } = useEditHod();
+  const { data: branch } = useBranch(branchId);
   const {
     register,
     handleSubmit,
@@ -51,21 +51,21 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
     formState: { errors },
     setValue,
   } = useForm<FormInputs>({
-    resolver: zodResolver(userEditSchema),
+    resolver: zodResolver(hodEditSchema),
   });
 
   useEffect(() => {
-    if (selectedGuard) {
-      setValue("name", selectedGuard.name || "");
-      setValue("email", selectedGuard.email || "");
-      setValue("phoneNumber", selectedGuard.phoneNumber || "");
-      setValue("employeeId", selectedGuard.employeeId || "");
-      setValue("isActive", selectedGuard.isActive || "ACTIVE");
+    if (selectedHod) {
+      setValue("name", selectedHod.name || "");
+      setValue("email", selectedHod.email || "");
+      setValue("phoneNumber", selectedHod.phoneNumber || "");
+      setValue("employeeId", selectedHod.employeeId || "");
+      setValue("isActive", selectedHod.isActive || "ACTIVE");
     }
-  }, [selectedGuard, setValue]);
+  }, [selectedHod, setValue]);
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    if (!selectedGuard) return;
+    if (!selectedHod) return;
 
     const updatedData = Object.fromEntries(
       Object.entries(data).filter(([key, value]) => {
@@ -74,14 +74,13 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       }),
     ) as Required<Omit<FormInputs, "password">>;
 
-    editGuardMutation(
+    editHodMutation(
       {
-        guardId: Number(selectedGuard.id),
-        guardData: {
+        hodId: Number(selectedHod.id),
+        hodData: {
           ...updatedData,
-          universityId: universityId,
-          gateId: selectedGuard.gateId ?? undefined,
-          isActive: updatedData.isActive === "ACTIVE" ? UserStatus.ACTIVE : UserStatus.INACTIVE,
+          isActive: updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
+          branchId: branchId,
         },
       },
       {
@@ -107,7 +106,7 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       id: "email",
       label: "Email",
       type: "email",
-      placeholder: "Enter email address",
+      placeholder: "Enter email",
     },
     {
       id: "phoneNumber",
@@ -118,8 +117,8 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
     {
       id: "employeeId",
       label: "Employee ID",
-      type: "tel",
-      placeholder: "Enter Employee ID",
+      type: "text",
+      placeholder: "Enter employee ID",
     },
   ];
 
@@ -131,10 +130,10 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       >
         <DialogHeader>
           <DialogTitle className="text-xl sm:text-2xl font-bold">
-            Edit Guard
+            Edit Branch
           </DialogTitle>
           <DialogDescription className="text-sm sm:text-base text-gray-600">
-            Fill out the form below to edit this guard.
+            Fill out the form below to edit this branch.
           </DialogDescription>
         </DialogHeader>
 
@@ -162,6 +161,40 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="branchId" className="text-sm font-semibold">
+              Branch <span className="text-red-500">*</span>
+            </Label>
+            <Controller
+              name="branchId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value?.toString()}
+                >
+                  <SelectTrigger className="w-full h-10">
+                    <SelectValue placeholder="Select a status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {branch?.data.map((branch: Branch) => (
+                      <SelectItem
+                        key={branch.id}
+                        value={branch.id.toString()}
+                        className="cursor-pointer hover:bg-gray-100"
+                      >
+                        {branch.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.branchId && (
+              <p className="text-red-500 text-xs">{errors.branchId.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="isActive" className="text-sm font-semibold">
               Status <span className="text-red-500">*</span>
             </Label>
@@ -180,11 +213,11 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
                     {[
                       {
                         label: "ACTIVE",
-                        value: UserStatus.ACTIVE,
+                        value: Status.ACTIVE,
                       },
                       {
                         label: "INACTIVE",
-                        value: UserStatus.INACTIVE,
+                        value: Status.INACTIVE,
                       },
                     ].map((status, index) => (
                       <SelectItem
@@ -227,4 +260,4 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
   );
 };
 
-export default EditGuardModal;
+export default EditHodModal;

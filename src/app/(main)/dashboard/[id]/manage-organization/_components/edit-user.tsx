@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Organization, Status } from "@/types/index.d";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -16,32 +17,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEditGuard } from "@/hooks/guard";
-import { guardEditSchema } from "@/schemas/guard";
-import { userEditSchema } from "@/schemas/users";
-import { Guard, UserStatus } from "@/types/index.d";
+import { useEditOrganization } from "@/hooks/organization";
+import { organizationEditSchema } from "@/schemas/organization";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-type FormInputs = z.infer<typeof guardEditSchema>;
+type FormInputs = z.infer<typeof organizationEditSchema>;
 
-interface EditGuardModalProps {
+interface EditOrganizationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  selectedGuard: Guard | null;
+  selectedOrganization: Organization | null;
   universityId: number;
 }
 
-const EditGuardModal: React.FC<EditGuardModalProps> = ({
+const EditOrganizationModal: React.FC<EditOrganizationModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
   universityId,
-  selectedGuard,
+  selectedOrganization,
 }) => {
-  const { mutate: editGuardMutation, isPending } = useEditGuard();
+  const { mutate: editOrganizationMutation, isPending } = useEditOrganization();
 
   const {
     register,
@@ -51,21 +51,19 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
     formState: { errors },
     setValue,
   } = useForm<FormInputs>({
-    resolver: zodResolver(userEditSchema),
+    resolver: zodResolver(organizationEditSchema),
   });
 
   useEffect(() => {
-    if (selectedGuard) {
-      setValue("name", selectedGuard.name || "");
-      setValue("email", selectedGuard.email || "");
-      setValue("phoneNumber", selectedGuard.phoneNumber || "");
-      setValue("employeeId", selectedGuard.employeeId || "");
-      setValue("isActive", selectedGuard.isActive || "ACTIVE");
+    if (selectedOrganization) {
+      setValue("name", selectedOrganization.name || "");
+      setValue("description", selectedOrganization.description || "");
+      setValue("isActive", selectedOrganization.isActive || "ACTIVE");
     }
-  }, [selectedGuard, setValue]);
+  }, [selectedOrganization, setValue]);
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    if (!selectedGuard) return;
+    if (!selectedOrganization) return;
 
     const updatedData = Object.fromEntries(
       Object.entries(data).filter(([key, value]) => {
@@ -74,14 +72,13 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       }),
     ) as Required<Omit<FormInputs, "password">>;
 
-    editGuardMutation(
+    editOrganizationMutation(
       {
-        guardId: Number(selectedGuard.id),
-        guardData: {
+        organizationId: Number(selectedOrganization.id),
+        organizationData: {
           ...updatedData,
+          isActive: updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
           universityId: universityId,
-          gateId: selectedGuard.gateId ?? undefined,
-          isActive: updatedData.isActive === "ACTIVE" ? UserStatus.ACTIVE : UserStatus.INACTIVE,
         },
       },
       {
@@ -104,22 +101,10 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       placeholder: "Enter name",
     },
     {
-      id: "email",
-      label: "Email",
-      type: "email",
-      placeholder: "Enter email address",
-    },
-    {
-      id: "phoneNumber",
-      label: "Phone Number",
-      type: "tel",
-      placeholder: "Enter phone number",
-    },
-    {
-      id: "employeeId",
-      label: "Employee ID",
-      type: "tel",
-      placeholder: "Enter Employee ID",
+      id: "description",
+      label: "Description",
+      type: "text",
+      placeholder: "Enter description",
     },
   ];
 
@@ -131,10 +116,10 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       >
         <DialogHeader>
           <DialogTitle className="text-xl sm:text-2xl font-bold">
-            Edit Guard
+            Edit Organization
           </DialogTitle>
           <DialogDescription className="text-sm sm:text-base text-gray-600">
-            Fill out the form below to edit this guard.
+            Fill out the form below to edit this organization.
           </DialogDescription>
         </DialogHeader>
 
@@ -180,11 +165,11 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
                     {[
                       {
                         label: "ACTIVE",
-                        value: UserStatus.ACTIVE,
+                        value: Status.ACTIVE,
                       },
                       {
                         label: "INACTIVE",
-                        value: UserStatus.INACTIVE,
+                        value: Status.INACTIVE,
                       },
                     ].map((status, index) => (
                       <SelectItem
@@ -227,4 +212,4 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
   );
 };
 
-export default EditGuardModal;
+export default EditOrganizationModal;

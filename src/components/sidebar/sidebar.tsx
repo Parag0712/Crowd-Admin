@@ -23,9 +23,9 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
   const { university } = useUniversityContext();
   const pathname = usePathname();
 
-  const isProjectPage = pathname.includes("/dashboard");
+  const isProjectPage = pathname.startsWith("/dashboard/");
   const projectId = isProjectPage ? university?.id : null;
-
+  
   const handleLogout = async () => {
     await signOut({
       callbackUrl: "/sign-in",
@@ -41,6 +41,7 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
     }
   }, [navOpened]);
 
+
   const getFilteredProjectLinks = (projectId: string): SideLink[] => {
     const links = getNavigationLinks(true, projectId);
     return links;
@@ -49,7 +50,7 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
   const navigationLinks =
     isProjectPage && projectId
       ? getFilteredProjectLinks(projectId.toString())
-      : getNavigationLinks(true, null);
+      : getNavigationLinks(false, null);
 
   return (
     <aside

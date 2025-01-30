@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Branch,  Status } from "@/types/index.d";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -16,32 +17,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEditGuard } from "@/hooks/guard";
-import { guardEditSchema } from "@/schemas/guard";
-import { userEditSchema } from "@/schemas/users";
-import { Guard, UserStatus } from "@/types/index.d";
+import { organizationEditSchema } from "@/schemas/organization";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-type FormInputs = z.infer<typeof guardEditSchema>;
+import { useEditBranch } from "@/hooks/branch";
+import { branchUpdateSchema } from "@/schemas/branch";
+type FormInputs = z.infer<typeof organizationEditSchema>;
 
-interface EditGuardModalProps {
+interface EditBranchModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  selectedGuard: Guard | null;
-  universityId: number;
+  selectedBranch: Branch | null;
+  orgId: number;
 }
 
-const EditGuardModal: React.FC<EditGuardModalProps> = ({
+const EditBranchModal: React.FC<EditBranchModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
-  universityId,
-  selectedGuard,
+  orgId,
+  selectedBranch,
 }) => {
-  const { mutate: editGuardMutation, isPending } = useEditGuard();
+  const { mutate: editBranchMutation, isPending } = useEditBranch();
 
   const {
     register,
@@ -51,21 +52,19 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
     formState: { errors },
     setValue,
   } = useForm<FormInputs>({
-    resolver: zodResolver(userEditSchema),
+    resolver: zodResolver(branchUpdateSchema),
   });
 
   useEffect(() => {
-    if (selectedGuard) {
-      setValue("name", selectedGuard.name || "");
-      setValue("email", selectedGuard.email || "");
-      setValue("phoneNumber", selectedGuard.phoneNumber || "");
-      setValue("employeeId", selectedGuard.employeeId || "");
-      setValue("isActive", selectedGuard.isActive || "ACTIVE");
+    if (selectedBranch) {
+      setValue("name", selectedBranch.name || "");
+      setValue("description", selectedBranch.description || "");
+      setValue("isActive", selectedBranch.isActive || "ACTIVE");
     }
-  }, [selectedGuard, setValue]);
+  }, [selectedBranch, setValue]);
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    if (!selectedGuard) return;
+    if (!selectedBranch) return;
 
     const updatedData = Object.fromEntries(
       Object.entries(data).filter(([key, value]) => {
@@ -74,14 +73,13 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       }),
     ) as Required<Omit<FormInputs, "password">>;
 
-    editGuardMutation(
+    editBranchMutation(
       {
-        guardId: Number(selectedGuard.id),
-        guardData: {
+        branchId: Number(selectedBranch.id),
+        branchData: {
           ...updatedData,
-          universityId: universityId,
-          gateId: selectedGuard.gateId ?? undefined,
-          isActive: updatedData.isActive === "ACTIVE" ? UserStatus.ACTIVE : UserStatus.INACTIVE,
+          isActive: updatedData.isActive === "ACTIVE" ? Status.ACTIVE : Status.INACTIVE,
+          orgId: orgId,
         },
       },
       {
@@ -104,22 +102,10 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       placeholder: "Enter name",
     },
     {
-      id: "email",
-      label: "Email",
-      type: "email",
-      placeholder: "Enter email address",
-    },
-    {
-      id: "phoneNumber",
-      label: "Phone Number",
-      type: "tel",
-      placeholder: "Enter phone number",
-    },
-    {
-      id: "employeeId",
-      label: "Employee ID",
-      type: "tel",
-      placeholder: "Enter Employee ID",
+      id: "description",
+      label: "Description",
+      type: "text",
+      placeholder: "Enter description",
     },
   ];
 
@@ -131,10 +117,10 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
       >
         <DialogHeader>
           <DialogTitle className="text-xl sm:text-2xl font-bold">
-            Edit Guard
+            Edit Branch
           </DialogTitle>
           <DialogDescription className="text-sm sm:text-base text-gray-600">
-            Fill out the form below to edit this guard.
+            Fill out the form below to edit this branch.
           </DialogDescription>
         </DialogHeader>
 
@@ -180,11 +166,11 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
                     {[
                       {
                         label: "ACTIVE",
-                        value: UserStatus.ACTIVE,
+                        value: Status.ACTIVE,
                       },
                       {
                         label: "INACTIVE",
-                        value: UserStatus.INACTIVE,
+                        value: Status.INACTIVE,
                       },
                     ].map((status, index) => (
                       <SelectItem
@@ -227,4 +213,4 @@ const EditGuardModal: React.FC<EditGuardModalProps> = ({
   );
 };
 
-export default EditGuardModal;
+export default EditBranchModal;
