@@ -11,10 +11,9 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Organization } from "@/types/index.d";
-import { UserRole } from "@/types/next-auth";
 import { PlusCircle } from "lucide-react";
 import dynamic from "next/dynamic";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import OrganizationDetails from "./details";
@@ -30,7 +29,7 @@ const EditOrganizationModal = dynamic(() => import("./edit-user"), {
   ssr: false,
 });
 
-export type RoleFilter = UserRole | "all";
+export type Filter = "ACTIVE" | "INACTIVE" | "all";
 
 const OrganizationTable = ({ universityId }: { universityId: number }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -39,7 +38,7 @@ const OrganizationTable = ({ universityId }: { universityId: number }) => {
   const [selectedOrganization, setSelectedOrganization] =
     useState<Organization | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const { mutate: deleteOrganizationMutation } = useDeleteOrganization();
   const toast = useCustomToast();
   const [currentPage, setCurrentPage] = useState(1);
@@ -90,19 +89,22 @@ const OrganizationTable = ({ universityId }: { universityId: number }) => {
     setCurrentPage(newPage);
   };
 
-  const filteredOrganizations = React.useMemo(() => {
+  const filteredOrganizations = useMemo(() => {
     if (!organizationsResponse?.data) return [];
 
     return Array.isArray(organizationsResponse.data)
       ? organizationsResponse.data.filter((organization: Organization) => {
-          const matchesSearch = Object.values(organization)
-            .join(" ")
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
-          return matchesSearch;
-        })
+        const matchesSearch = Object.values(organization)
+          .join(" ")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+
+        const matchesRoleFilter = filter === "all" || organization.isActive === filter;
+
+        return matchesSearch && matchesRoleFilter;
+      })
       : [];
-  }, [organizationsResponse?.data, searchTerm]);
+  }, [organizationsResponse?.data, searchTerm, filter]);
 
   return (
     <div className="space-y-4">
@@ -124,16 +126,16 @@ const OrganizationTable = ({ universityId }: { universityId: number }) => {
             className="w-full sm:max-w-sm py-2 px-4 rounded-lg focus:ring-primary focus:border-primary"
           />
           <Select
-            value={roleFilter as string}
-            onValueChange={(value) => setRoleFilter(value as RoleFilter)}
+            value={filter as string}
+            onValueChange={(value) => setFilter(value as Filter)}
           >
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Filter by role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Roles</SelectItem>
-              <SelectItem value="ADMIN">Admin</SelectItem>
-              <SelectItem value="USER">User</SelectItem>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="ACTIVE">Active</SelectItem>
+              <SelectItem value="INACTIVE">Inactive</SelectItem>
             </SelectContent>
           </Select>
         </div>

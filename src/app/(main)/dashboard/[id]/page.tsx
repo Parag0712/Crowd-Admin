@@ -3,12 +3,12 @@ import { Card } from "@/components/ui/card";
 import { usePathname, useRouter } from "next/navigation";
 // import { useProjects } from "@/hooks/management/manage-project";
 import { Separator } from "@/components/ui/separator";
+import { useUniversityContext } from "@/contexts/universityContext";
+import { useOrganizationByUniversityId } from "@/hooks/organization";
 import { cn } from "@/lib/utils";
 import { Organization } from "@/types/index.d";
 import { ArrowRight, Building2, MapPin, XCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useOrganization } from "@/hooks/organization";
-import { useUniversityContext } from "@/contexts/universityContext";
 
 const OrganizationCardSkeleton = () => (
   <Card className="p-4 sm:p-6 animate-pulse">
@@ -90,11 +90,10 @@ const OrganizationCard = ({
   );
 };
 
-export default function DashboardPage() {
+export default function DashboardPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { data: session } = useSession();
-  // const { data: projectsResponse, isLoading } = useProjects();
-  const { data: organization, isLoading } = useOrganization();
+  const { data: organization, isLoading } = useOrganizationByUniversityId(Number(params.id));
   const { university } = useUniversityContext();
   const pathname = usePathname();
   const organizationData = (organization?.data as Organization[]) || [];
@@ -134,15 +133,15 @@ export default function DashboardPage() {
 
         {isLoading
           ? Array.from({ length: 3 }).map((_, index) => (
-              <OrganizationCardSkeleton key={`skeleton-${index}`} />
-            ))
+            <OrganizationCardSkeleton key={`skeleton-${index}`} />
+          ))
           : organizationData.map((organization, index) => (
-              <OrganizationCard
-                key={index}
-                organization={organization}
-                onClick={() => handleOrganizationClick(organization.id)}
-              />
-            ))}
+            <OrganizationCard
+              key={index}
+              organization={organization}
+              onClick={() => handleOrganizationClick(organization.id)}
+            />
+          ))}
       </div>
     </div>
   );

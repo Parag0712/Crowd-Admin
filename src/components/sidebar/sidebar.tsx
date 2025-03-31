@@ -1,4 +1,4 @@
-import { SideLink, getNavigationLinks } from "@/constants/sidelinks";
+import { getNavigationLinks } from "@/constants/sidelinks";
 import { useUniversityContext } from "@/contexts/universityContext";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, LogOut, Menu, X } from "lucide-react";
@@ -10,7 +10,6 @@ import React, { useEffect, useState } from "react";
 import { Button } from "./custom/button";
 import { Layout } from "./custom/layout";
 import Nav from "./nav";
-// import { useProjectById } from "@/hooks/management/manage-project";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   isCollapsed: boolean;
@@ -22,9 +21,11 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const { university } = useUniversityContext();
   const pathname = usePathname();
-
-  const isProjectPage = pathname.startsWith("/dashboard/");
-  const projectId = isProjectPage ? university?.id : null;
+  const isUniversityPage = pathname.startsWith("/dashboard/") && Boolean(university?.id);
+  const organizationMatch = pathname.match(/\/dashboard\/(\w+)\/organization\/(\w+)/);
+  const isOrganizationPage = !!organizationMatch;
+  const universityId =  String(university?.id);
+  const organizationId = isOrganizationPage ? organizationMatch[2] : null;
 
   const handleLogout = async () => {
     await signOut({
@@ -41,30 +42,24 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
     }
   }, [navOpened]);
 
-  const getFilteredProjectLinks = (projectId: string): SideLink[] => {
-    const links = getNavigationLinks(true, projectId);
-    return links;
-  };
-
-  const navigationLinks =
-    isProjectPage && projectId
-      ? getFilteredProjectLinks(projectId.toString())
-      : getNavigationLinks(false, null);
-
+  const navigationLinks = getNavigationLinks(
+    isUniversityPage,
+    universityId,
+    isOrganizationPage,
+    organizationId
+  );
   return (
     <aside
       className={cn(
-        `fixed left-0 right-0 top-0 z-50 w-full border-r-2 border-r-muted transition-[width] md:bottom-0 md:right-auto md:h-svh ${
-          isCollapsed ? "md:w-14" : "md:w-64"
+        `fixed left-0 right-0 top-0 z-50 w-full border-r-2 border-r-muted transition-[width] md:bottom-0 md:right-auto md:h-svh ${isCollapsed ? "md:w-14" : "md:w-64"
         }`,
         className,
       )}
     >
       <div
         onClick={() => setNavOpened(false)}
-        className={`absolute inset-0 transition-[opacity] delay-100 duration-700 ${
-          navOpened ? "h-svh opacity-50" : "h-0 opacity-0"
-        } w-full bg-black md:hidden`}
+        className={`absolute inset-0 transition-[opacity] delay-100 duration-700 ${navOpened ? "h-svh opacity-50" : "h-0 opacity-0"
+          } w-full bg-black md:hidden`}
       />
 
       <Layout fixed className={navOpened ? "h-svh" : ""}>

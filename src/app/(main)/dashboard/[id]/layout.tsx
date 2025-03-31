@@ -10,20 +10,12 @@ export default function RootLayout({
   params,
   children,
 }: Readonly<{
-  params: { id: string };
+  params: { id?: string }; // Made `id` optional
   children: React.ReactNode;
 }>) {
   const router = useRouter();
-  const id = Number(params.id);
+  const id = params.id ? Number(params.id) : NaN;
   const { university, setUniversity } = useUniversityContext();
-
-  // Validate the id parameter
-  useEffect(() => {
-    if (isNaN(id)) {
-      router.push("/dashboard");
-    }
-  }, [id, router]);
-
   const { data, isLoading, isError, refetch } = useGetUniversity(id);
 
   // Redirect if university data is not found or there's an error
@@ -40,17 +32,9 @@ export default function RootLayout({
     }
   }, [data?.data, setUniversity]);
 
-  // Refetch data when the university context changes
   useEffect(() => {
     refetch();
   }, [university, refetch]);
-
-  // Clear the university context when the component unmounts
-  useEffect(() => {
-    return () => {
-      setUniversity(null);
-    };
-  }, [setUniversity]);
 
   // Show a loading state while fetching data
   if (isLoading) {

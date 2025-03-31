@@ -12,11 +12,9 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useDeleteGate, useGate } from "@/hooks/gate";
 import { Gate } from "@/types";
-import { UserRole } from "@/types/next-auth";
 import { PlusCircle } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useState } from "react";
-// import AddGuardModal from "./add-user";
+import { useMemo, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import GateDetails from "./details";
@@ -31,7 +29,7 @@ const EditGateModal = dynamic(() => import("./edit-user"), {
   ssr: false,
 });
 
-export type RoleFilter = UserRole | "all";
+export type Filter = "ACTIVE" | "INACTIVE" | "all";
 
 const GateTable = ({ universityId }: { universityId: number }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -39,7 +37,7 @@ const GateTable = ({ universityId }: { universityId: number }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedGate, setSelectedGate] = useState<Gate | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const { mutate: deleteGateMutation } = useDeleteGate();
   const toast = useCustomToast();
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,6 +48,26 @@ const GateTable = ({ universityId }: { universityId: number }) => {
     isLoading,
     refetch: refetchGates,
   } = useGate(currentPage, pageSize, universityId);
+
+  // Filter gates based on the filter (ACTIVE, INACTIVE, or all) and search term
+  const filteredGates = useMemo(() => {
+    if (!gatesResponse?.data) return [];
+
+    return gatesResponse.data.filter((gate: Gate) => {
+      const matchesSearch = Object.values(gate)
+        .join(" ")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      // Filter gates based on the 'status' or 'filter' selected
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "ACTIVE" && gate.isActive === "ACTIVE") ||
+        (filter === "INACTIVE" && gate.isActive === "INACTIVE");
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [gatesResponse?.data, searchTerm, filter]);
 
   const handleViewDetails = (gate: Gate) => {
     setSelectedGate(gate as Gate);
@@ -90,24 +108,6 @@ const GateTable = ({ universityId }: { universityId: number }) => {
     setCurrentPage(newPage);
   };
 
-  // const filteredUsers = React.useMemo(() => {
-  //   if (!guardsResponse?.data || !session?.user?.id) return [];
-
-  //   return Array.isArray(guardsResponse.data)
-  //     ? guardsResponse.data
-  //         .filter((guard: Guard) => guard.id !== session.user.id)
-  //         .filter((guard: Guard) => {
-  //           const matchesSearch = Object.values(guard)
-  //             .join(" ")
-  //             .toLowerCase()
-  //             .includes(searchTerm.toLowerCase());
-  //           const matchesRole =
-  //               roleFilter === "all" || guard.role === roleFilter;
-  //           return matchesSearch && matchesRole;
-  //         })
-  //     : [];
-  // }, [guardsResponse?.data, session?.user?.id, searchTerm, roleFilter]);
-
   return (
     <div className="space-y-4">
       <div>
@@ -126,15 +126,16 @@ const GateTable = ({ universityId }: { universityId: number }) => {
             className="w-full sm:max-w-sm py-2 px-4 rounded-lg focus:ring-primary focus:border-primary"
           />
           <Select
-            value={roleFilter as string}
-            onValueChange={(value) => setRoleFilter(value as RoleFilter)}
+            value={filter as string}
+            onValueChange={(value) => setFilter(value as Filter)}
           >
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Filter by role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Roles</SelectItem>
-              <SelectItem value="ADMIN">Admin</SelectItem>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="ACTIVE">Active</SelectItem>
+              <SelectItem value="INACTIVE">Inactive</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -153,7 +154,7 @@ const GateTable = ({ universityId }: { universityId: number }) => {
             onDelete: handleDelete,
             onViewDetails: handleViewDetails,
           })}
-          data={gatesResponse?.data ?? []}
+          data={filteredGates}
           loading={isLoading}
           pageSize={pageSize}
           currentPage={currentPage}

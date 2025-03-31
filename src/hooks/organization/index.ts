@@ -13,7 +13,7 @@ export const useOrganization = (
   universityId?: number,
 ) => {
   return useQuery({
-    queryKey: ["organization", page, pageSize],
+    queryKey: ["organization", page, pageSize, universityId],
     queryFn: async () => {
       const response = await organizationService.getAll(
         page,
@@ -25,12 +25,23 @@ export const useOrganization = (
   });
 };
 
+export const useOrganizationByUniversityId = (universityId: number) => {
+  return useQuery({
+    queryKey: ["organization", universityId],
+    queryFn: async () => {
+      const response =
+        await organizationService.getAllByUniversityId(universityId);
+      return response;
+    },
+  });
+};
+
 export const useGetOrganization = (id: number) => {
   return useQuery({
     queryKey: ["organization", id],
     enabled: !!id,
     queryFn: async () => {
-      const response = await organizationService.getAll(1, 10, id);
+      const response = await organizationService.getById(id);
       return response;
     },
   });

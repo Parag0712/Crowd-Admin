@@ -22,7 +22,18 @@ export const useGetBranch = (id: number) => {
     queryKey: ["branch", id],
     enabled: !!id,
     queryFn: async () => {
-      const response = await branchService.getAll(1, 10, id);
+      const response = await branchService.getById(id);
+      return response;
+    },
+  });
+};
+
+export const useGetBranchOrgById = (orgId: number) => {
+  return useQuery({
+    queryKey: ["branch", orgId],
+    enabled: !!orgId,
+    queryFn: async () => {
+      const response = await branchService.getAllOrgId(orgId);
       return response;
     },
   });

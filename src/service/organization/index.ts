@@ -37,6 +37,12 @@ export const organizationService = {
       "GET",
     ),
 
+  getAllByUniversityId: (universityId: number) =>
+    fetchHandler<ApiResponse>(
+      `${ORGANIZATION_API.GET_ALL}?universityId=${universityId}`,
+      "GET",
+    ),
+
   getById: (organizationId: number) =>
     fetchHandler<ApiResponse>(
       ORGANIZATION_API.GET_BY_ID(organizationId),

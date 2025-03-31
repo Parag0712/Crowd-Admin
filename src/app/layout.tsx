@@ -7,6 +7,7 @@ import React from "react";
 import Loader from "@/components/comman/Loader";
 import { Toaster } from "@/components/ui/toaster";
 import { UniversityProvider } from "@/contexts/universityContext";
+import { OrganizationProvider } from "@/contexts/organizationContext";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -31,7 +32,9 @@ export default function RootLayout({
           <QueryProvider>
             <React.Suspense fallback={<Loader />}>
               <UniversityProvider>
-                {children}
+                <OrganizationProvider>
+                 {children}
+                </OrganizationProvider>
                 <Toaster />
               </UniversityProvider>
             </React.Suspense>

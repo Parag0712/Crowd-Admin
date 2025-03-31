@@ -4,7 +4,7 @@ import {
   handleMutationSuccess,
   handleMutationError,
 } from "@/lib/mutation-utils";
-import { HodPayload } from "@/types/index.d";
+import { Approve_Status, HodPayload } from "@/types/index.d";
 import { hodService } from "@/service/hod";
 
 export const useHod = (
@@ -21,7 +21,7 @@ export const useHod = (
   });
 };
 
-export const useGetPrincipal = (id: number) => {
+export const useGetHod = (id: number) => {
   return useQuery({
     queryKey: ["hod", id],
     enabled: !!id,
@@ -29,6 +29,36 @@ export const useGetPrincipal = (id: number) => {
       const response = await hodService.getById(id);
       return response;
     },
+  });
+};
+
+export const useGetAllHodApproveList = (orgId: number) => {
+  return useQuery({
+    queryKey: ["hod-all-approve-list", orgId],
+    queryFn: async () => {
+      const response = await hodService.getApprovalList(orgId);
+      return response;
+    },
+  });
+};
+
+export const useApproveHod = () => {
+  const queryClient = useQueryClient();
+  const toast = useCustomToast();
+
+  return useMutation({
+    mutationFn: ({
+      hodId,
+      status,
+    }: {
+      hodId: number;
+      status: Approve_Status;
+    }) => hodService.approveHod(hodId, status),
+    onSuccess: (response) =>
+      handleMutationSuccess(response, toast, queryClient, [
+        "hod-all-approve-list",
+      ]),
+    onError: (error) => handleMutationError(error, toast),
   });
 };
 

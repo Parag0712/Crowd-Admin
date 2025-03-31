@@ -13,7 +13,7 @@ export const useGate = (
   universityId?: number,
 ) => {
   return useQuery({
-    queryKey: ["gate", page, pageSize],
+    queryKey: ["gate", page, pageSize, universityId],
     queryFn: async () => {
       const response = await gateService.getAll(page, pageSize, universityId);
       return response;

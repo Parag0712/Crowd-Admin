@@ -11,14 +11,14 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { useDeleteHod, useHod } from "@/hooks/hod";
-import { Hod, Organization } from "@/types/index.d";
-import { UserRole } from "@/types/next-auth";
+import { Branch, Hod } from "@/types/index.d";
 import { PlusCircle } from "lucide-react";
 import dynamic from "next/dynamic";
-import React, { useState } from "react";
+import { useMemo, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import HodDetails from "./details";
+import { useGetBranchOrgById } from "@/hooks/branch";
 
 const AddHodModal = dynamic(() => import("./add-user"), {
   loading: () => <span></span>,
@@ -30,7 +30,7 @@ const EditHodModal = dynamic(() => import("./edit-user"), {
   ssr: false,
 });
 
-export type RoleFilter = UserRole | "all";
+export type Filter = "ACTIVE" | "INACTIVE" | "all";
 
 const HodTable = ({ orgId }: { orgId: number }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -38,17 +38,40 @@ const HodTable = ({ orgId }: { orgId: number }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedHod, setSelectedHod] = useState<Hod | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const { mutate: deleteHodMutation } = useDeleteHod();
   const toast = useCustomToast();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
+  const [filterBranch, setFilterBranch] = useState<string>("all");
+  const { data: branch } = useGetBranchOrgById(orgId);
 
   const {
-    data: organizationsResponse,
+    data: hodsResponse,
     isLoading,
     refetch: refetchHods,
   } = useHod(currentPage, pageSize, orgId);
+
+  // Filter
+  const filteredHods = useMemo(() => {
+    if (!hodsResponse?.data) return [];
+
+    return hodsResponse.data.filter((hod: Hod) => {
+      const matchesSearch = Object.values(hod)
+        .join(" ")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "ACTIVE" && hod.isActive === "ACTIVE") ||
+        (filter === "INACTIVE" && hod.isActive === "INACTIVE");
+
+      const matchesBranch = filterBranch == "all" || Number(filterBranch) == hod.branch.id;
+
+      return matchesSearch && matchesFilter && matchesBranch;
+    });
+  }, [hodsResponse?.data, searchTerm, filter, filterBranch]);
 
   const handleViewDetails = (hod: Hod) => {
     setSelectedHod(hod as Hod);
@@ -89,20 +112,6 @@ const HodTable = ({ orgId }: { orgId: number }) => {
     setCurrentPage(newPage);
   };
 
-  const filteredOrganizations = React.useMemo(() => {
-    if (!organizationsResponse?.data) return [];
-
-    return Array.isArray(organizationsResponse.data)
-      ? organizationsResponse.data.filter((organization: Organization) => {
-          const matchesSearch = Object.values(organization)
-            .join(" ")
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
-          return matchesSearch;
-        })
-      : [];
-  }, [organizationsResponse?.data, searchTerm]);
-
   return (
     <div className="space-y-4">
       <div>
@@ -121,16 +130,38 @@ const HodTable = ({ orgId }: { orgId: number }) => {
             className="w-full sm:max-w-sm py-2 px-4 rounded-lg focus:ring-primary focus:border-primary"
           />
           <Select
-            value={roleFilter as string}
-            onValueChange={(value) => setRoleFilter(value as RoleFilter)}
+            value={filter as string}
+            onValueChange={(value) => setFilter(value as Filter)}
           >
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Filter by role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Roles</SelectItem>
-              <SelectItem value="ADMIN">Admin</SelectItem>
-              <SelectItem value="USER">User</SelectItem>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="ACTIVE">Active</SelectItem>
+              <SelectItem value="INACTIVE">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={filterBranch!}
+            onValueChange={(value) => setFilterBranch(value)}
+          >
+            <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectValue placeholder="Filter by role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {
+                branch?.data?.map((branch: Branch) => (
+                  <SelectItem
+                    key={branch.id}
+                    value={branch.id.toString()}
+                    className="cursor-pointer hover:bg-gray-100"
+                  >
+                    {branch.name}
+                  </SelectItem>
+                ))
+              }
             </SelectContent>
           </Select>
         </div>
@@ -149,11 +180,11 @@ const HodTable = ({ orgId }: { orgId: number }) => {
             onDelete: handleDelete,
             onViewDetails: handleViewDetails,
           })}
-          data={filteredOrganizations}
+          data={filteredHods}
           loading={isLoading}
           pageSize={pageSize}
           currentPage={currentPage}
-          totalItems={organizationsResponse?.data?.length ?? 0}
+          totalItems={hodsResponse?.data?.length ?? 0}
           onPageChange={handlePageChange}
           onEdit={handleEdit}
           onDelete={handleDelete}

@@ -1,7 +1,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { AxiosError } from "axios";
 
-type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 export async function fetchHandler<T>(
   url: string,

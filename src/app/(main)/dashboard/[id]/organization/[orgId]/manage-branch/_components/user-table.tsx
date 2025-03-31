@@ -10,15 +10,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Branch, Organization } from "@/types/index.d";
-import { UserRole } from "@/types/next-auth";
+import { useBranch, useDeleteBranch } from "@/hooks/branch";
+import { Branch } from "@/types/index.d";
 import { PlusCircle } from "lucide-react";
 import dynamic from "next/dynamic";
-import React, { useState } from "react";
+import { useMemo, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import BranchDetails from "./details";
-import { useDeleteBranch, useBranch } from "@/hooks/branch";
 
 const AddBranchModal = dynamic(() => import("./add-user"), {
   loading: () => <span></span>,
@@ -30,7 +29,7 @@ const EditBranchModal = dynamic(() => import("./edit-user"), {
   ssr: false,
 });
 
-export type RoleFilter = UserRole | "all";
+export type Filter = "ACTIVE" | "INACTIVE" | "all";
 
 const BranchTable = ({ orgId }: { orgId: number }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -38,17 +37,37 @@ const BranchTable = ({ orgId }: { orgId: number }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const { mutate: deleteBranchMutation } = useDeleteBranch();
   const toast = useCustomToast();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
   const {
-    data: organizationsResponse,
+    data: branchesResponse,
     isLoading,
     refetch: refetchBranches,
   } = useBranch(currentPage, pageSize, orgId);
+
+  // Filter gates based on the filter (ACTIVE, INACTIVE, or all) and search term
+  const filteredBranches = useMemo(() => {
+    if (!branchesResponse?.data) return [];
+
+    return branchesResponse.data.filter((gate: Branch) => {
+      const matchesSearch = Object.values(gate)
+        .join(" ")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "ACTIVE" && gate.isActive === "ACTIVE") ||
+        (filter === "INACTIVE" && gate.isActive === "INACTIVE");
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [branchesResponse?.data, searchTerm, filter]);
+
 
   const handleViewDetails = (branch: Branch) => {
     setSelectedBranch(branch as Branch);
@@ -89,20 +108,6 @@ const BranchTable = ({ orgId }: { orgId: number }) => {
     setCurrentPage(newPage);
   };
 
-  const filteredOrganizations = React.useMemo(() => {
-    if (!organizationsResponse?.data) return [];
-
-    return Array.isArray(organizationsResponse.data)
-      ? organizationsResponse.data.filter((organization: Organization) => {
-          const matchesSearch = Object.values(organization)
-            .join(" ")
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
-          return matchesSearch;
-        })
-      : [];
-  }, [organizationsResponse?.data, searchTerm]);
-
   return (
     <div className="space-y-4">
       <div>
@@ -121,16 +126,16 @@ const BranchTable = ({ orgId }: { orgId: number }) => {
             className="w-full sm:max-w-sm py-2 px-4 rounded-lg focus:ring-primary focus:border-primary"
           />
           <Select
-            value={roleFilter as string}
-            onValueChange={(value) => setRoleFilter(value as RoleFilter)}
+            value={filter as string}
+            onValueChange={(value) => setFilter(value as Filter)}
           >
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Filter by role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Roles</SelectItem>
-              <SelectItem value="ADMIN">Admin</SelectItem>
-              <SelectItem value="USER">User</SelectItem>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="ACTIVE">Active</SelectItem>
+              <SelectItem value="INACTIVE">Inactive</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -149,11 +154,11 @@ const BranchTable = ({ orgId }: { orgId: number }) => {
             onDelete: handleDelete,
             onViewDetails: handleViewDetails,
           })}
-          data={filteredOrganizations}
+          data={filteredBranches}
           loading={isLoading}
           pageSize={pageSize}
           currentPage={currentPage}
-          totalItems={organizationsResponse?.data?.length ?? 0}
+          totalItems={branchesResponse?.data?.length ?? 0}
           onPageChange={handlePageChange}
           onEdit={handleEdit}
           onDelete={handleDelete}

@@ -1,7 +1,6 @@
 "use client";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-// import { useProjects } from "@/hooks/management/manage-project";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { University } from "@/types/index.d";
@@ -93,9 +92,7 @@ const UniversityCard = ({
 export default function DashboardPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  // const { data: projectsResponse, isLoading } = useProjects();
   const { data: university, isLoading } = useUniversity();
-
   const universityData = (university?.data as University[]) || [];
 
   const handleUniversityClick = (universityId: number) => {

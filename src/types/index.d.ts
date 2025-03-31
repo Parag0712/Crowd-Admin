@@ -219,6 +219,79 @@ export interface Hod {
   };
 }
 
+export interface ApprovalListType {
+  id: number;
+  approverType: string;
+  approvedName: string;
+  approvedEmail: string;
+  approvedByName: string;
+  approvedByEmail: string;
+  status: string;
+  approvedAt: string;
+  createdAt: string;
+  updatedAt: string;
+  studentId: number;
+  securityguardId: string;
+  principalId: number;
+  hodId: number;
+  facultyId: number;
+  adminId: number;
+  branch: {
+    id: number;
+    name: string;
+    orgId: number;
+  };
+}
+
+export interface FacultyPayload {
+  branchId: number;
+  employeeId: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  password?: string;
+  isActive?: Status;
+}
+
+export interface Faculty {
+  id: number;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  employeeId: string;
+  isActive: Status;
+  createdAt: string;
+  updatedAt: string;
+  branch: {
+    id: number;
+    name: string;
+  };
+}
+
+export interface StundetPayload {
+  branchId: number;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  facultyId: number;
+  studentId: string;
+}
+
+interface Student {
+  id: number;
+  name: string;
+  email: string;
+  studentId: string;
+  phoneNumber: string;
+  isActive: "ACTIVE" | "INACTIVE";
+  createdAt: string;
+  updatedAt: string;
+  branch: Branch;
+}
+
+export type Approve_Status = "APPROVED" | "REJECTED" | "PENDING";
+
 export const SMS_TEMPLATE_VARIABLES = {
   user_reg_001: ["user_name", "registration_date"],
   user_reg_002: ["email_address", "password"],

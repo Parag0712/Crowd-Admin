@@ -42,7 +42,7 @@ export const columns = ({
       const org = row.getValue("organizationsAsPrincipal") as {
         name: string;
       };
-      return <span>{org.name}</span>;
+      return <span>{org?.name}</span>;
     },
   },
   {

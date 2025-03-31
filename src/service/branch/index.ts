@@ -27,6 +27,9 @@ export const branchService = {
       "GET",
     ),
 
+  getAllOrgId: (orgId: number) =>
+    fetchHandler<ApiResponse>(`${BRANCH_API.GET_ALL}?orgId=${orgId}`, "GET"),
+
   getById: (branchId: number) =>
     fetchHandler<ApiResponse>(BRANCH_API.GET_BY_ID(branchId), "GET"),
 };
