@@ -14,7 +14,11 @@ interface FacultyDetailsProps {
   faculty: Faculty | null;
 }
 
-const FacultyDetails: React.FC<FacultyDetailsProps> = ({ isOpen, onClose, faculty }) => {
+const FacultyDetails: React.FC<FacultyDetailsProps> = ({
+  isOpen,
+  onClose,
+  faculty,
+}) => {
   if (!faculty) return null;
 
   const formatDate = (dateString: string) => {

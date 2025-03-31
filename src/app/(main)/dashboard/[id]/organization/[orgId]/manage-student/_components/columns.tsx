@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {  Student } from "@/types";
+import { Student } from "@/types";
 
 interface ColumnsProps {
   onEdit: (data: Student) => void;

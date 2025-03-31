@@ -62,7 +62,6 @@ const AddFacultyModal: React.FC<AddStudentModalProps> = ({
   const selectedBranchId = watch("branchId");
   const { data: faculty } = useGetFacultyByBranchId(selectedBranchId);
 
-
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     addStudentMutation(data, {
       onSuccess: (response) => {

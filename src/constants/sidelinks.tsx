@@ -65,7 +65,10 @@ const getUniversityLinks = (universityId: string): SideLink[] => [
   },
 ];
 
-const getOrganizationLinks = (universityId: string, orgnizationId: string): SideLink[] => [
+const getOrganizationLinks = (
+  universityId: string,
+  orgnizationId: string,
+): SideLink[] => [
   {
     title: "Manage Branch",
     label: "",
@@ -89,8 +92,8 @@ const getOrganizationLinks = (universityId: string, orgnizationId: string): Side
         label: "",
         href: `/dashboard/${universityId}/organization/${orgnizationId}/manage-approvelist-hod`,
         icon: <HomeIcon size={18} />,
-      }
-    ]
+      },
+    ],
   },
   {
     title: "Faculty",
@@ -109,8 +112,8 @@ const getOrganizationLinks = (universityId: string, orgnizationId: string): Side
         label: "",
         href: `/dashboard/${universityId}/organization/${orgnizationId}/manage-approvelist-faculty`,
         icon: <HomeIcon size={18} />,
-      }
-    ]
+      },
+    ],
   },
   {
     title: "Student",
@@ -118,17 +121,19 @@ const getOrganizationLinks = (universityId: string, orgnizationId: string): Side
     href: ``,
     icon: <HomeIcon size={18} />,
     sub: [
-      {title: "Manage",
+      {
+        title: "Manage",
         label: "",
         href: `/dashboard/${universityId}/organization/${orgnizationId}/manage-student`,
-        icon: <HomeIcon size={18} />},
+        icon: <HomeIcon size={18} />,
+      },
       {
         title: "Approvelist",
         label: "",
         href: `/dashboard/${universityId}/organization/${orgnizationId}/manage-approvelist-student`,
         icon: <HomeIcon size={18} />,
-      }
-    ]
+      },
+    ],
   },
 ];
 
@@ -138,7 +143,6 @@ export const getNavigationLinks = (
   isOrgnizationPage: boolean,
   orgnizationId: string | null,
 ): SideLink[] => {
-
   if (isOrgnizationPage && orgnizationId) {
     return getOrganizationLinks(universityId!, orgnizationId);
   }

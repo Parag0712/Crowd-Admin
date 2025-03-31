@@ -68,7 +68,6 @@ const BranchTable = ({ orgId }: { orgId: number }) => {
     });
   }, [branchesResponse?.data, searchTerm, filter]);
 
-
   const handleViewDetails = (branch: Branch) => {
     setSelectedBranch(branch as Branch);
     setIsDetailsModalOpen(true);

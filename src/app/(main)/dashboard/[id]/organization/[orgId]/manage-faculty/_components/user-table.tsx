@@ -66,12 +66,11 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
         filter === "all" ||
         (filter === "ACTIVE" && faculty.isActive === "ACTIVE") ||
         (filter === "INACTIVE" && faculty.isActive === "INACTIVE");
-      const matchesBranch = filterBranch == "all" || Number(filterBranch) == faculty.branch.id;
+      const matchesBranch =
+        filterBranch == "all" || Number(filterBranch) == faculty.branch.id;
       return matchesSearch && matchesFilter && matchesBranch;
-
     });
   }, [facultysResponse?.data, searchTerm, filter, filterBranch]);
-
 
   const handleViewDetails = (faculty: Faculty) => {
     setSelectedFaculty(faculty as Faculty);
@@ -115,7 +114,9 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Faculty Management</h2>
+        <h2 className="text-2xl font-bold tracking-tight">
+          Faculty Management
+        </h2>
         <p className="text-muted-foreground">
           View and manage all faculty in the system
         </p>
@@ -151,17 +152,15 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              {
-                branch?.data?.map((branch: Branch) => (
-                  <SelectItem
-                    key={branch.id}
-                    value={branch.id.toString()}
-                    className="cursor-pointer hover:bg-gray-100"
-                  >
-                    {branch.name}
-                  </SelectItem>
-                ))
-              }
+              {branch?.data?.map((branch: Branch) => (
+                <SelectItem
+                  key={branch.id}
+                  value={branch.id.toString()}
+                  className="cursor-pointer hover:bg-gray-100"
+                >
+                  {branch.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

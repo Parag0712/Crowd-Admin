@@ -32,9 +32,7 @@ export default function RootLayout({
           <QueryProvider>
             <React.Suspense fallback={<Loader />}>
               <UniversityProvider>
-                <OrganizationProvider>
-                 {children}
-                </OrganizationProvider>
+                <OrganizationProvider>{children}</OrganizationProvider>
                 <Toaster />
               </UniversityProvider>
             </React.Suspense>

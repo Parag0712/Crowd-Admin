@@ -94,15 +94,16 @@ const OrganizationTable = ({ universityId }: { universityId: number }) => {
 
     return Array.isArray(organizationsResponse.data)
       ? organizationsResponse.data.filter((organization: Organization) => {
-        const matchesSearch = Object.values(organization)
-          .join(" ")
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
+          const matchesSearch = Object.values(organization)
+            .join(" ")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
 
-        const matchesRoleFilter = filter === "all" || organization.isActive === filter;
+          const matchesRoleFilter =
+            filter === "all" || organization.isActive === filter;
 
-        return matchesSearch && matchesRoleFilter;
-      })
+          return matchesSearch && matchesRoleFilter;
+        })
       : [];
   }, [organizationsResponse?.data, searchTerm, filter]);
 

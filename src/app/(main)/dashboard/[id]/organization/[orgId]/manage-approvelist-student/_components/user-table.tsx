@@ -8,7 +8,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { useApproveStudent, useGetAllStudentApproveList } from "@/hooks/student";
+import {
+  useApproveStudent,
+  useGetAllStudentApproveList,
+} from "@/hooks/student";
 import { useMemo, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
@@ -18,12 +21,12 @@ import { useCustomToast } from "@/components/providers/toaster-provider";
 import { ApprovalListType, Approve_Status, Branch } from "@/types/index.d";
 import { useGetBranchOrgById } from "@/hooks/branch";
 
-
 export type Filter = "APPROVED" | "PENDING" | "REJECTED" | "all";
 
 const FacultyTable = ({ orgId }: { orgId: number }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [selectedFaculty, setSelectedFaculty] = useState<ApprovalListType | null>(null);
+  const [selectedFaculty, setSelectedFaculty] =
+    useState<ApprovalListType | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,10 +35,8 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
 
   const pageSize = 10;
   const toast = useCustomToast();
-  const {
-    data: studentResponse,
-    isLoading
-  } = useGetAllStudentApproveList(orgId);
+  const { data: studentResponse, isLoading } =
+    useGetAllStudentApproveList(orgId);
   const { mutate: approveStudent } = useApproveStudent();
 
   // Filter
@@ -48,7 +49,8 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
       const matchesFilter = filter === "all" || filter === student.status;
-      const matchesBranch = filterBranch == "all" || Number(filterBranch) == student.branch.id;
+      const matchesBranch =
+        filterBranch == "all" || Number(filterBranch) == student.branch.id;
       return matchesSearch && matchesFilter && matchesBranch;
     });
   }, [studentResponse?.data, searchTerm, filter, filterBranch]);
@@ -63,7 +65,6 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
     setSelectedFaculty(null);
   };
 
-
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
@@ -74,17 +75,21 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
       {
         onSuccess: (response) => {
           if (response.success) {
-            toast.success({ message: "Student Approved Status Updated Successfully" });
+            toast.success({
+              message: "Student Approved Status Updated Successfully",
+            });
           }
         },
-      }
-    )
+      },
+    );
   };
 
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Faculty Management</h2>
+        <h2 className="text-2xl font-bold tracking-tight">
+          Faculty Management
+        </h2>
         <p className="text-muted-foreground">
           View and manage all students in the system
         </p>
@@ -121,21 +126,18 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              {
-                branch?.data?.map((branch: Branch) => (
-                  <SelectItem
-                    key={branch.id}
-                    value={branch.id.toString()}
-                    className="cursor-pointer hover:bg-gray-100"
-                  >
-                    {branch.name}
-                  </SelectItem>
-                ))
-              }
+              {branch?.data?.map((branch: Branch) => (
+                <SelectItem
+                  key={branch.id}
+                  value={branch.id.toString()}
+                  className="cursor-pointer hover:bg-gray-100"
+                >
+                  {branch.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
-
       </div>
       <div className="overflow-x-auto">
         <DataTable
@@ -149,8 +151,8 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
           currentPage={currentPage}
           totalItems={studentResponse?.data?.length ?? 0}
           onPageChange={handlePageChange}
-          onEdit={() => { }}
-          onDelete={() => { }}
+          onEdit={() => {}}
+          onDelete={() => {}}
         />
       </div>
       {isDetailsModalOpen && selectedFaculty && (

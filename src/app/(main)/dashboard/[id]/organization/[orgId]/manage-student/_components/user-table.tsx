@@ -66,7 +66,8 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
         filter === "all" ||
         (filter === "ACTIVE" && student.isActive === "ACTIVE") ||
         (filter === "INACTIVE" && student.isActive === "INACTIVE");
-      const matchesBranch = filterBranch == "all" || Number(filterBranch) == student.branch.id;
+      const matchesBranch =
+        filterBranch == "all" || Number(filterBranch) == student.branch.id;
       return matchesSearch && matchesFilter && matchesBranch;
     });
   }, [studentResponse?.data, searchTerm, filter]);
@@ -113,7 +114,9 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Student Management</h2>
+        <h2 className="text-2xl font-bold tracking-tight">
+          Student Management
+        </h2>
         <p className="text-muted-foreground">
           View and manage all student in the system
         </p>
@@ -149,17 +152,15 @@ const FacultyTable = ({ orgId }: { orgId: number }) => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              {
-                branch?.data?.map((branch: Branch) => (
-                  <SelectItem
-                    key={branch.id}
-                    value={branch.id.toString()}
-                    className="cursor-pointer hover:bg-gray-100"
-                  >
-                    {branch.name}
-                  </SelectItem>
-                ))
-              }
+              {branch?.data?.map((branch: Branch) => (
+                <SelectItem
+                  key={branch.id}
+                  value={branch.id.toString()}
+                  className="cursor-pointer hover:bg-gray-100"
+                >
+                  {branch.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

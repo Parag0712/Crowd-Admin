@@ -93,7 +93,9 @@ const OrganizationCard = ({
 export default function DashboardPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { data: session } = useSession();
-  const { data: organization, isLoading } = useOrganizationByUniversityId(Number(params.id));
+  const { data: organization, isLoading } = useOrganizationByUniversityId(
+    Number(params.id),
+  );
   const { university } = useUniversityContext();
   const pathname = usePathname();
   const organizationData = (organization?.data as Organization[]) || [];
@@ -133,15 +135,15 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
 
         {isLoading
           ? Array.from({ length: 3 }).map((_, index) => (
-            <OrganizationCardSkeleton key={`skeleton-${index}`} />
-          ))
+              <OrganizationCardSkeleton key={`skeleton-${index}`} />
+            ))
           : organizationData.map((organization, index) => (
-            <OrganizationCard
-              key={index}
-              organization={organization}
-              onClick={() => handleOrganizationClick(organization.id)}
-            />
-          ))}
+              <OrganizationCard
+                key={index}
+                organization={organization}
+                onClick={() => handleOrganizationClick(organization.id)}
+              />
+            ))}
       </div>
     </div>
   );

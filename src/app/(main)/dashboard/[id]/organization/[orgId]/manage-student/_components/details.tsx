@@ -14,7 +14,11 @@ interface StudentDetailsProps {
   student: Student | null;
 }
 
-const StudentDetails: React.FC<StudentDetailsProps> = ({ isOpen, onClose, student }) => {
+const StudentDetails: React.FC<StudentDetailsProps> = ({
+  isOpen,
+  onClose,
+  student,
+}) => {
   if (!student) return null;
 
   const formatDate = (dateString: string) => {

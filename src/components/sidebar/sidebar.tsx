@@ -21,10 +21,13 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const { university } = useUniversityContext();
   const pathname = usePathname();
-  const isUniversityPage = pathname.startsWith("/dashboard/") && Boolean(university?.id);
-  const organizationMatch = pathname.match(/\/dashboard\/(\w+)\/organization\/(\w+)/);
+  const isUniversityPage =
+    pathname.startsWith("/dashboard/") && Boolean(university?.id);
+  const organizationMatch = pathname.match(
+    /\/dashboard\/(\w+)\/organization\/(\w+)/,
+  );
   const isOrganizationPage = !!organizationMatch;
-  const universityId =  String(university?.id);
+  const universityId = String(university?.id);
   const organizationId = isOrganizationPage ? organizationMatch[2] : null;
 
   const handleLogout = async () => {
@@ -46,20 +49,22 @@ function Sidebar({ className, isCollapsed, setIsCollapsed }: SidebarProps) {
     isUniversityPage,
     universityId,
     isOrganizationPage,
-    organizationId
+    organizationId,
   );
   return (
     <aside
       className={cn(
-        `fixed left-0 right-0 top-0 z-50 w-full border-r-2 border-r-muted transition-[width] md:bottom-0 md:right-auto md:h-svh ${isCollapsed ? "md:w-14" : "md:w-64"
+        `fixed left-0 right-0 top-0 z-50 w-full border-r-2 border-r-muted transition-[width] md:bottom-0 md:right-auto md:h-svh ${
+          isCollapsed ? "md:w-14" : "md:w-64"
         }`,
         className,
       )}
     >
       <div
         onClick={() => setNavOpened(false)}
-        className={`absolute inset-0 transition-[opacity] delay-100 duration-700 ${navOpened ? "h-svh opacity-50" : "h-0 opacity-0"
-          } w-full bg-black md:hidden`}
+        className={`absolute inset-0 transition-[opacity] delay-100 duration-700 ${
+          navOpened ? "h-svh opacity-50" : "h-0 opacity-0"
+        } w-full bg-black md:hidden`}
       />
 
       <Layout fixed className={navOpened ? "h-svh" : ""}>

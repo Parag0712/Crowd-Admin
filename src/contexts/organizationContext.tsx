@@ -1,6 +1,6 @@
 "use client";
 
-import { Organization,  } from "@/types";
+import { Organization } from "@/types";
 import { createContext, type ReactNode, useState, useContext } from "react";
 
 interface OrganizationContextType {

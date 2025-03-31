@@ -8,15 +8,22 @@ import { useUniversityContext } from "@/contexts/universityContext";
 import { ArrowRight, Building2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
-
-export default function DashboardPage({params}:{params:{id:string,orgId:string}}) {
+export default function DashboardPage({
+  params,
+}: {
+  params: { id: string; orgId: string };
+}) {
   const router = useRouter();
   const { data: session } = useSession();
   const managementOptions = [
     { name: "Manage Students", icon: Building2, path: "/manage-students" },
     { name: "Manage Faculty", icon: Building2, path: "/manage-faculty" },
     { name: "Manage Courses", icon: Building2, path: "/manage-courses" },
-    { name: "Manage Departments", icon: Building2, path: "/manage-departments" },
+    {
+      name: "Manage Departments",
+      icon: Building2,
+      path: "/manage-departments",
+    },
   ];
 
   const { university } = useUniversityContext();
@@ -40,7 +47,11 @@ export default function DashboardPage({params}:{params:{id:string,orgId:string}}
           <Card
             key={index}
             className="p-4 sm:p-6 cursor-pointer hover:shadow-lg transition-all duration-300 border-dashed border-2 hover:border-primary hover:bg-primary/5 flex items-center justify-center group relative overflow-hidden"
-            onClick={() => router.push(`/dashboard/${params.id}/organization/${params.orgId}/${option.path}`)}
+            onClick={() =>
+              router.push(
+                `/dashboard/${params.id}/organization/${params.orgId}/${option.path}`,
+              )
+            }
           >
             <div className="text-center relative z-10">
               <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 bg-primary/10 rounded-xl flex items-center justify-center transition-colors">

@@ -89,10 +89,12 @@ const OrganizationCard = ({
   );
 };
 
-export default function DashboardPage({params}:{params:{id:string}}) {
+export default function DashboardPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { data: session } = useSession();
-  const { data: organization, isLoading } = useOrganizationByUniversityId(Number(params.id));
+  const { data: organization, isLoading } = useOrganizationByUniversityId(
+    Number(params.id),
+  );
   const { university } = useUniversityContext();
   const pathname = usePathname();
   const organizationData = (organization?.data as Organization[]) || [];

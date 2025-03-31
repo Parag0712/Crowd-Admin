@@ -14,7 +14,11 @@ interface FacultyDetailsProps {
   faculty: ApprovalListType | null;
 }
 
-const FacultyDetails: React.FC<FacultyDetailsProps> = ({ isOpen, onClose, faculty }) => {
+const FacultyDetails: React.FC<FacultyDetailsProps> = ({
+  isOpen,
+  onClose,
+  faculty,
+}) => {
   if (!faculty) return null;
 
   const formatDate = (dateString: string) => {
@@ -52,8 +56,6 @@ const FacultyDetails: React.FC<FacultyDetailsProps> = ({ isOpen, onClose, facult
                     {faculty.approvedEmail} - {faculty.approvedName}
                   </p>
                 </div>
-
-
               </div>
             </div>
 

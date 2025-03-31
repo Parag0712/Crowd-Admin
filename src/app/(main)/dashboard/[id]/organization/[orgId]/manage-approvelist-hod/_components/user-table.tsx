@@ -31,10 +31,7 @@ const HodTable = ({ orgId }: { orgId: number }) => {
   const toast = useCustomToast();
   const { data: branch } = useGetBranchOrgById(orgId);
 
-  const {
-    data: hodsResponse,
-    isLoading,
-  } = useGetAllHodApproveList(orgId);
+  const { data: hodsResponse, isLoading } = useGetAllHodApproveList(orgId);
   const { mutate: approveHod } = useApproveHod();
 
   // Filter
@@ -47,7 +44,8 @@ const HodTable = ({ orgId }: { orgId: number }) => {
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
       const matchesFilter = filter === "all" || filter === hod.status;
-      const matchesBranch = filterBranch == "all" || Number(filterBranch) == hod.branch.id;
+      const matchesBranch =
+        filterBranch == "all" || Number(filterBranch) == hod.branch.id;
       return matchesSearch && matchesFilter && matchesBranch;
     });
   }, [hodsResponse?.data, searchTerm, filter, filterBranch]);
@@ -71,11 +69,13 @@ const HodTable = ({ orgId }: { orgId: number }) => {
       {
         onSuccess: (response) => {
           if (response.success) {
-            toast.success({ message: "Student Approved Status Updated Successfully" });
+            toast.success({
+              message: "Student Approved Status Updated Successfully",
+            });
           }
         },
-      }
-    )
+      },
+    );
   };
 
   return (
@@ -118,21 +118,18 @@ const HodTable = ({ orgId }: { orgId: number }) => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              {
-                branch?.data?.map((branch: Branch) => (
-                  <SelectItem
-                    key={branch.id}
-                    value={branch.id.toString()}
-                    className="cursor-pointer hover:bg-gray-100"
-                  >
-                    {branch.name}
-                  </SelectItem>
-                ))
-              }
+              {branch?.data?.map((branch: Branch) => (
+                <SelectItem
+                  key={branch.id}
+                  value={branch.id.toString()}
+                  className="cursor-pointer hover:bg-gray-100"
+                >
+                  {branch.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
-
       </div>
       <div className="overflow-x-auto">
         <DataTable
@@ -146,8 +143,8 @@ const HodTable = ({ orgId }: { orgId: number }) => {
           currentPage={currentPage}
           totalItems={hodsResponse?.data?.length ?? 0}
           onPageChange={handlePageChange}
-          onEdit={() => { }}
-          onDelete={() => { }}
+          onEdit={() => {}}
+          onDelete={() => {}}
         />
       </div>
 

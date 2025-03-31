@@ -67,7 +67,8 @@ const HodTable = ({ orgId }: { orgId: number }) => {
         (filter === "ACTIVE" && hod.isActive === "ACTIVE") ||
         (filter === "INACTIVE" && hod.isActive === "INACTIVE");
 
-      const matchesBranch = filterBranch == "all" || Number(filterBranch) == hod.branch.id;
+      const matchesBranch =
+        filterBranch == "all" || Number(filterBranch) == hod.branch.id;
 
       return matchesSearch && matchesFilter && matchesBranch;
     });
@@ -151,17 +152,15 @@ const HodTable = ({ orgId }: { orgId: number }) => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              {
-                branch?.data?.map((branch: Branch) => (
-                  <SelectItem
-                    key={branch.id}
-                    value={branch.id.toString()}
-                    className="cursor-pointer hover:bg-gray-100"
-                  >
-                    {branch.name}
-                  </SelectItem>
-                ))
-              }
+              {branch?.data?.map((branch: Branch) => (
+                <SelectItem
+                  key={branch.id}
+                  value={branch.id.toString()}
+                  className="cursor-pointer hover:bg-gray-100"
+                >
+                  {branch.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

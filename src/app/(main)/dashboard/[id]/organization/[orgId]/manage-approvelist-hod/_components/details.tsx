@@ -52,8 +52,6 @@ const HodDetails: React.FC<HodDetailsProps> = ({ isOpen, onClose, hod }) => {
                     {hod.approvedEmail} - {hod.approvedName}
                   </p>
                 </div>
-
-
               </div>
             </div>
 
